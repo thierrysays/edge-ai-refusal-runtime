@@ -210,6 +210,7 @@ docs/              architecture, control map, ADRs, build log
 - [Technical reference](docs/TECHNICAL_REFERENCE.md) — module by module, with the shape of every artefact
 - [Threat model](docs/THREAT_MODEL.md) — what is defended, and the residual risk that is accepted rather than overlooked
 - [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md) — an external review at v0.1.0, with what it found
+- [Standard of work](docs/STANDARD_OF_WORK.md) — what "done" means here, and where this repository falls short of it
 - [Control map](docs/CONTROL_MAP.md) — each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
 - [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)) — what was built, in what order, and what was wrong on the way
 - [Architecture decisions](docs/adr/) — including the three uncomfortable ones

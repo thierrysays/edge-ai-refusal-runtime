@@ -72,6 +72,19 @@ something regressed — do not adjust the scenario to match the new output.
     either string invalidates every signature and every chain made before the
     change. Do not "tidy" them into agreement with the slug. → ADR 0010.
 
+## The standard of work
+
+Every deliverable meets `docs/STANDARD_OF_WORK.md` by default: functional
+documentation, technical documentation, a neophyte path, a bare-metal path, the
+seven test layers (smoke, unit, functional, security, QA, quality gate,
+pen-test), a threat model, and a bilingual build log entry. Departures are
+stated in the pull request.
+
+That document also lists where **this** repository currently falls short of it —
+no bare-metal path, test layers not separable, no fuzzer over the journal and
+card parsers, no repository-consistency layer. Closing any of those is welcome
+work; pretending they are closed is not.
+
 ## Conventions
 
 **Tests assert on the world, not the log.** `assert bench.cell.speed == 0.3`,
