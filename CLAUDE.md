@@ -72,6 +72,44 @@ something regressed — do not adjust the scenario to match the new output.
     either string invalidates every signature and every chain made before the
     change. Do not "tidy" them into agreement with the slug. → ADR 0010.
 
+## The delivery standard
+
+Every deliverable ships with all seven of the following. This is the standing
+default across this repository and its siblings — `measurement-harness` and
+`fleet-ops-lab` carry the same list — not a per-task decision. Work that adds
+behaviour without its documentation and its tiers is unfinished, not fast.
+
+1. **Technical documentation** — module by module, every artefact field, every
+   error code. → `docs/TECHNICAL_REFERENCE.md`
+2. **Functional documentation** — actors, numbered requirements, acceptance
+   criteria, written so someone who never reads the source can check a claim.
+   → `docs/FUNCTIONAL_SPEC.md`
+3. **A neophyte path** — a guide assuming no terminal, no Python, no git, that
+   ends with the reader breaking something on purpose and watching a control
+   fire. → `docs/GETTING_STARTED.md`
+4. **A bare-metal run** — how it works on real hardware, no container, with the
+   wiring, permissions and the one test that must pass before the model is worth
+   anything on that board.
+5. **A full test harness** — smoke, unit, functional, security and pen-test
+   tiers, each selectable by marker, each with a stated purpose.
+   → `docs/TEST_STRATEGY.md`
+6. **A QA gate** — lint, strict types, SAST, dependency advisories, coverage.
+   Everything in it fails the build. → `make qa`
+7. **A threat model with residual risks**, each pinned by a test that
+   demonstrates the gap rather than hiding it. → `docs/THREAT_MODEL.md`
+
+**Where this repository does not yet meet it.** Points 1, 2, 3, 6 and 7 are
+covered. Two are not, and saying so is cheaper than discovering it:
+
+- **Point 4** — there is no `docs/BARE_METAL.md` here. Bare-metal work is
+  deferred to the sibling `governed-edge-ai` deployment guide, and nothing in
+  this repository has run on a board. Writing it is part of milestone 1 below.
+- **Point 5** — the suite is one flat tier plus `tests/test_adversarial.py`,
+  which is the pen-test tier under an older name. There is no smoke tier, and
+  the security concerns are spread through the adversarial file rather than
+  separated. Restructuring into `tests/{smoke,unit,functional,security,pentest}/`
+  with markers applied from the path is tracked, not done.
+
 ## Conventions
 
 **Tests assert on the world, not the log.** `assert bench.cell.speed == 0.3`,
