@@ -8,3 +8,12 @@ dist/
 run/
 *.jsonl
 !examples/*.jsonl
+
+# Produced by `make qa`. Every one of these is written into the working tree by
+# a gate a contributor is told to run, so leaving them untracked makes the gate
+# dirty the repository it is checking.
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
