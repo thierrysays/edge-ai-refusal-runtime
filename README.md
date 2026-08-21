@@ -203,6 +203,7 @@ docs/              architecture, control map, ADRs, build log
 
 ## Documentation
 
+- [**Changelog**](CHANGELOG.md) — what each release contains, and what it does not
 - [**Getting started**](docs/GETTING_STARTED.md) — from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
 - [Architecture](docs/ARCHITECTURE.md) — the five controls and why they are ordered as they are
 - [Functional specification](docs/FUNCTIONAL_SPEC.md) — actors, requirements, and what counts as the build being good

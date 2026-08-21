@@ -1,0 +1,89 @@
+name: release
+
+# Cuts a release from whatever `main` currently is: an annotated tag at that
+# commit, plus a GitHub Release whose notes are the matching CHANGELOG section.
+#
+# Run it from the Actions tab — "release" → "Run workflow". Nothing fires on a
+# push; a release is a decision, not a side effect of merging.
+#
+# The version is read from pyproject.toml rather than typed into the form, so
+# the tag cannot disagree with what `pip install` reports.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Resolve the version and print the notes, but create nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # A release that has not been verified is a release of nothing in
+      # particular. The gate runs again here rather than trusting the run on
+      # the merge commit.
+      - run: python -m pip install -U pip setuptools
+      - run: pip install -e ".[dev]"
+      - run: python -m ruff check src tests
+      - run: python -m mypy
+      - run: python -m bandit -q -r src
+      - run: python -m pytest --cov --cov-report=term
+
+      - name: Resolve the version from pyproject.toml
+        id: version
+        run: |
+          V=$(python -c "import tomllib,pathlib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")
+          echo "tag=v$V" >> "$GITHUB_OUTPUT"
+          echo "Version resolved: v$V"
+
+      - name: Refuse if the tag already exists
+        run: |
+          if git rev-parse "refs/tags/${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::error::${{ steps.version.outputs.tag }} already exists. Bump the version in pyproject.toml; do not move a published tag."
+            exit 1
+          fi
+
+      - name: Extract this version's CHANGELOG section
+        id: notes
+        run: |
+          python - <<'PY' > RELEASE_NOTES.md
+          import pathlib, re
+          tag = "${{ steps.version.outputs.tag }}".lstrip("v")
+          text = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+          m = re.search(rf"^## \[{re.escape(tag)}\].*?(?=^## \[|\Z)", text, re.S | re.M)
+          if not m:
+              raise SystemExit(f"No CHANGELOG section for {tag}. Write it before releasing.")
+          print(m.group(0).strip())
+          PY
+          echo "--- notes ---"; cat RELEASE_NOTES.md
+
+      - name: Create the tag and the release
+        if: ${{ inputs.dry_run == false }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file RELEASE_NOTES.md \
+            --verify-tag
+
+      - name: Dry run — nothing was created
+        if: ${{ inputs.dry_run }}
+        run: echo "Dry run. Re-run with dry_run unchecked to create ${{ steps.version.outputs.tag }}."
