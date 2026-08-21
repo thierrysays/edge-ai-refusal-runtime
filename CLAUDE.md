@@ -119,6 +119,15 @@ Deleting a test deletes the row.
   transmission belongs to whoever operates the fleet. → ADR 0007.
 - **`SimulatedModel` is a stand-in**, not a detector. Its two knobs — miss rate
   and false-alarm rate — are the governance events that matter.
+- **Fleet operations and measurement are somebody else's repository.** OTA,
+  rollback, SBOM, reproducible builds and container orchestration live in
+  `fleet-ops-lab`; power, latency and thermal measurement live in
+  `measurement-harness`. Both are hardware-agnostic, neither depends on this
+  package, and this package depends on neither. → ADR 0011. The only interface
+  is a file: a `measurement-harness/energy-model/v1` export replaces a
+  `DeviceProfile.energy_model`, and its `source` string is copied **verbatim**
+  into `energy_model_source`. Do not add either as a dependency.
+
 - **The device profiles are capability, not job assignment.** `available_controls`
   records what a board *can* enforce, which is what the admission gate needs to
   know. It does not say which job that board holds in a rig. The sibling
@@ -136,7 +145,9 @@ Nothing has run on hardware. In priority order:
    **de-energised**. Everything else is theory until that is observed.
    Start at `hal/devices.py::UnoQDevice.porting_note`.
 2. Replace one `energy_model` estimate with a measured figure (INA219 over
-   Qwiic) and record the gap in `docs/BUILD_LOG.*`.
+   Qwiic) and record the gap in `docs/BUILD_LOG.*`. The producer is the sibling
+   `measurement-harness`; its `ina219.py` porting note is the specification, and
+   its export refuses to hand over a figure that was not measured.
 3. Move the actuation loop to the **STM32H5 on the VENTUNO Q** under Zephyr, so
    a Linux stall cannot keep the machine running.
 
