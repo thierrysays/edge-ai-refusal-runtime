@@ -14,7 +14,7 @@ this suite asserts that something was refused.
 
 A governance test that only checks that something was logged is testing the
 logger. The end-to-end tests assert on the simulated cell: the belt speed did
-not change, the part was not diverted, the relay is open. Keep that habit — it
+not change, the part was not diverted, the relay is open. Keep that habit, it
 is what makes the suite survive a refactor of the journal format.
 
 ## Fail closed, and leave no override
@@ -27,7 +27,7 @@ control at all.
 Two defaults are load-bearing and should not be relaxed without an ADR:
 
 - the stop channel starts **engaged**, and only a named operator releases it;
-- the default confirmer is `AbsentOperator`, which **refuses** — an escalation
+- the default confirmer is `AbsentOperator`, which **refuses**, an escalation
   nobody answers is a refusal, not a permission.
 
 ## Device profiles are conservative by construction
@@ -41,7 +41,7 @@ the capability is demonstrated on the bench, and say so in the build log.
 
 A choice a competent engineer could reasonably have made differently gets an ADR
 in `docs/adr/`, with its **cost** stated. ADRs are immutable; a reversal is a new
-ADR. The uncomfortable ones — 0006 and 0007 — are the ones that make the rest
+ADR. The uncomfortable ones: 0006 and 0007, are the ones that make the rest
 credible.
 
 ## Before opening a pull request

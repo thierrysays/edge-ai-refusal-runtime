@@ -5,7 +5,7 @@ architectural preference: a rule expressed as a Python callable cannot be
 diffed by a risk officer, versioned in a change record, or shown to an auditor
 as the thing that was actually in force on a given date.
 
-Evaluation semantics, in full — they are short on purpose:
+Evaluation semantics, in full, they are short on purpose:
 
 1. Every rule whose ``when`` clause matches the request contributes its effect.
 2. The decision is the **strongest** contributed effect (``deny`` >
@@ -14,7 +14,7 @@ Evaluation semantics, in full — they are short on purpose:
 4. Evaluation is total: an unparseable rule is a configuration error at load
    time, never a runtime surprise that quietly evaluates to false.
 
-Point 3 is the one people argue about. The counter-argument is operational —
+Point 3 is the one people argue about. The counter-argument is operational,
 default-deny means every new action must be authorised before it can run, which
 is friction. That friction is the product, not a side effect.
 """
@@ -72,7 +72,7 @@ class Rule:
         """All conditions must hold (conjunction). Absent attribute → no match.
 
         The exception is the ``exists`` operator, which is the only way to write
-        a condition *about* absence — otherwise a typo in an attribute path would
+        a condition *about* absence, otherwise a typo in an attribute path would
         silently produce a rule that never fires, which is the most dangerous
         failure mode a policy language can have.
         """

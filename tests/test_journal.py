@@ -2,8 +2,8 @@
 
 Each test corresponds to a way a log gets quietly rewritten in practice:
 an entry edited, an entry removed, entries reordered, a whole file replaced.
-The requirement is not that these be impossible — on a Linux SBC with root
-access they are not — but that they be *named* when they happen.
+The requirement is not that these be impossible, on a Linux SBC with root
+access they are not, but that they be *named* when they happen.
 """
 
 from __future__ import annotations

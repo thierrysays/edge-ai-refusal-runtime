@@ -1,8 +1,8 @@
 """Injectable time.
 
 Evidence that cannot be reproduced is not evidence. Every timestamp written to
-the journal comes from a ``Clock``, so a test — or an auditor replaying a
-scenario — can pin time and obtain byte-identical artefacts.
+the journal comes from a ``Clock``, so a test, or an auditor replaying a
+scenario, can pin time and obtain byte-identical artefacts.
 """
 
 from __future__ import annotations

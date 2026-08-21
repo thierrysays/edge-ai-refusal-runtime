@@ -1,4 +1,4 @@
-# ADR 0002 — The model card is the admission gate, not documentation
+# ADR 0002, The model card is the admission gate, not documentation
 
 **Status:** accepted · 2026-08-21
 

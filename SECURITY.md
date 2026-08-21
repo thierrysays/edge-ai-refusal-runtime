@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Report privately through **GitHub Security Advisories** — the *Report a
+Report privately through **GitHub Security Advisories**, the *Report a
 vulnerability* button under the Security tab of this repository. Please do not
 open a public issue for a security report.
 
@@ -23,7 +23,7 @@ stated plainly rather than dressed up as a vendor SLA.
 
 ## Scope
 
-In scope: anything that makes a control fail *open* — a model admitted that
+In scope: anything that makes a control fail *open*, a model admitted that
 should have been refused, a journal alteration that verification does not
 detect, an actuation that reaches the device without a policy decision, a stop
 channel that reports disengaged while the relay is open.
@@ -40,7 +40,7 @@ Out of scope, because they are documented design positions rather than defects:
   Pinned deliberately by
   `test_truncation_is_detected_only_against_a_checkpoint`.
 
-If you think one of those positions is wrong, open an issue — that is a design
+If you think one of those positions is wrong, open an issue, that is a design
 argument, not an advisory.
 
 ## Not a conformity assessment

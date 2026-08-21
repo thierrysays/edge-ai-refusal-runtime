@@ -24,7 +24,7 @@ SCHEMA_ID = "governed-edge-ai/model-card/v1"
 RISK_TIERS = ("minimal", "limited", "high")
 
 #: Controls this runtime knows how to enforce. A card may not demand a control
-#: the runtime cannot provide — that combination fails closed rather than
+#: the runtime cannot provide, that combination fails closed rather than
 #: silently degrading, which is the usual way paper controls become fiction.
 KNOWN_CONTROLS = (
     "inference_journal",

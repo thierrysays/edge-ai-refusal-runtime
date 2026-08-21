@@ -2,18 +2,18 @@
 
 Ce qui a été construit, dans quel ordre, et ce qui était faux en chemin. Tenu
 parce que la matière intéressante d'un projet de gouvernance, ce sont les
-arbitrages — et qu'un arbitrage n'est lisible que tant que ses raisons sont
+arbitrages, et qu'un arbitrage n'est lisible que tant que ses raisons sont
 fraîches.
 
 ---
 
-## 21 août 2026 — Jour 1
+## 21 août 2026, Jour 1
 
 ### Point de départ
 
 Cinq cartes, commandées entre juin et août 2026 : une UNO Q 4 Go, une VENTUNO Q,
 une UNO R4 WiFi avec les nœuds Modulino du Plug and Make Kit, un Alvik et une
-Nesso N1. Toutes ne sont pas encore sur l'établi — la VENTUNO Q est partie le
+Nesso N1. Toutes ne sont pas encore sur l'établi, la VENTUNO Q est partie le
 20 août.
 
 Cette contrainte a fixé la première décision : **la simulation d'abord**.
@@ -23,21 +23,21 @@ dépendance pour quelque chose destiné à tourner sur un parc. → ADR 0005.
 
 ### Ordre de construction
 
-1. `canonical.py` — avant tout ce qui serait haché. Clés triées, aucun espace
+1. `canonical.py` : avant tout ce qui serait haché. Clés triées, aucun espace
    non significatif, flottants non finis rejetés. Une empreinte ne vaut que le
    déterminisme des octets qui la produisent.
-2. `clock.py` — temps injectable. Une preuve qu'on ne peut rejouer est une
+2. `clock.py` : temps injectable. Une preuve qu'on ne peut rejouer est une
    anecdote.
-3. `registry/` — schéma de fiche de modèle, signature Ed25519, porte d'admission.
-4. `journal/` — primitives Merkle, puis la chaîne, puis le vérificateur
+3. `registry/` : schéma de fiche de modèle, signature Ed25519, porte d'admission.
+4. `journal/` : primitives Merkle, puis la chaîne, puis le vérificateur
    indépendant.
-5. `policy/` — décisions, moteur, budgets.
-6. `oversight/` — canaux d'arrêt, superviseur.
-7. `marking/` — provenance article 50.
-8. `hal/` — cellule simulée, puis profils de cartes.
-9. `agent/` — le runtime qui câble les cinq contrôles dans l'ordre, puis le
+5. `policy/` : décisions, moteur, budgets.
+6. `oversight/` : canaux d'arrêt, superviseur.
+7. `marking/` : provenance article 50.
+8. `hal/` : cellule simulée, puis profils de cartes.
+9. `agent/` : le runtime qui câble les cinq contrôles dans l'ordre, puis le
    scénario.
-10. `cli.py` — produire la preuve, vérifier la preuve : deux commandes distinctes.
+10. `cli.py` : produire la preuve, vérifier la preuve : deux commandes distinctes.
 
 Les tests ont été écrits en même temps que chaque module, non après. La suite
 atteint 113 tests, dont la grande majorité sont négatifs : une porte qui admet un
@@ -51,7 +51,7 @@ transplantable, et surtout cela ne dit rien de *qui* a signé ni *quand*.
 Remplacé par une structure à signer qui lie l'empreinte de la fiche,
 l'identifiant de clé du signataire et l'horodatage de signature. Les rôles sont
 ensuite résolus depuis le magasin de confiance au moment de la vérification,
-jamais lus dans l'enveloppe — ce qui ferme la confusion de rôles par la même
+jamais lus dans l'enveloppe, ce qui ferme la confusion de rôles par la même
 occasion. `test_signature_cannot_be_transplanted_between_cards` et
 `test_two_signatures_from_the_same_role_do_not_form_a_quorum` verrouillent les
 deux.
@@ -62,7 +62,7 @@ Le manifeste de provenance portait initialement l'empreinte de l'entrée de
 journal qui enregistrait l'inférence. Or cette entrée porte l'empreinte du
 manifeste. Ce n'est pas seulement inélégant : c'est incalculable. Je ne l'ai vu
 qu'après avoir écrit un `object.__setattr__` sur une dataclass gelée pour
-rapiécer le manifeste après coup — le genre de ligne qu'il faut lire comme une
+rapiécer le manifeste après coup, le genre de ligne qu'il faut lire comme une
 alarme, pas comme un contournement.
 
 Résolu en rendant le lien unidirectionnel : journal → manifeste. Un auditeur qui
@@ -105,8 +105,8 @@ Les deux sont enregistrées comme *acceptées*, non comme *reportées* :
   changerait rien au modèle de menace tout en donnant l'apparence du contraire.
   → ADR 0006.
 - **Pas d'ancrage externe.** Les points de contrôle sont produits exactement sous
-  la forme qui fermerait la fenêtre de troncature — un intervalle, une racine,
-  une signature, aucune charge utile — et délibérément non transmis, parce que le
+  la forme qui fermerait la fenêtre de troncature, un intervalle, une racine,
+  une signature, aucune charge utile, et délibérément non transmis, parce que le
   choix du témoin appartient à qui exploite le parc. → ADR 0007.
 
 Les deux figurent dans le tableau « claims deliberately not made » de la

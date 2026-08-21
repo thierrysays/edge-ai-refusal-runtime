@@ -3,7 +3,7 @@
 The tests that matter here are the *negative* ones. A gate that admits a good
 model proves nothing; a gate that admits a bad one is worse than no gate at all,
 because it manufactures assurance. Each refusal below corresponds to a control
-claimed in docs/CONTROL_MAP.md — if a test is deleted, the claim goes with it.
+claimed in docs/CONTROL_MAP.md, if a test is deleted, the claim goes with it.
 """
 
 from __future__ import annotations

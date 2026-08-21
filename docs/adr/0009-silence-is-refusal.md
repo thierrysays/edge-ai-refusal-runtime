@@ -1,4 +1,4 @@
-# ADR 0009 — An unanswered escalation is a refusal
+# ADR 0009, An unanswered escalation is a refusal
 
 **Status:** accepted · 2026-08-21
 
@@ -17,7 +17,7 @@ outright.
 ## Rationale
 
 An escalation that nobody answers produces a record, not a decision. Treating it
-as approval is oversight theatre — and it is the specific mechanism by which a
+as approval is oversight theatre, and it is the specific mechanism by which a
 control that passed its acceptance test degrades into a rubber stamp over the
 following year.
 

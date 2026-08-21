@@ -2,7 +2,7 @@
 
 Two commands matter: ``demo`` produces evidence, ``verify`` checks it. The rest
 exist so that the evidence can be produced by someone other than the person who
-checks it — which is the only arrangement in which verification means anything.
+checks it, which is the only arrangement in which verification means anything.
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
     paths = write_scenario_artifacts(args.out, result)
 
     counters = result["report"]["counters"]
-    print(f"scenario complete — artefacts in {args.out}")
+    print(f"scenario complete, artefacts in {args.out}")
     print(f"  journal      : {result['journal_path']}")
     print(f"  trace        : {paths['trace']}")
     print(f"  trust store  : {paths['trust_store']}")
@@ -94,7 +94,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
 def cmd_keygen(args: argparse.Namespace) -> int:
     key = SigningKey.generate(args.key_id, args.role)
     _dump(args.out, key.to_document())
-    print(f"private key written to {args.out} (unprotected — see ADR 0006)")
+    print(f"private key written to {args.out} (unprotected, see ADR 0006)")
     now = SystemClock().now()
     entry = key.public_entry(now, now + timedelta(days=args.valid_days))
     print(json.dumps(entry, indent=2))
@@ -173,7 +173,7 @@ def cmd_devices(args: argparse.Namespace) -> int:
 # --------------------------------------------------------------------- policy
 def cmd_policy(args: argparse.Namespace) -> int:
     engine = PolicyEngine.from_file(args.policy)
-    print(f"{engine.name} v{engine.version} — {len(engine.rules)} rules "
+    print(f"{engine.name} v{engine.version}, {len(engine.rules)} rules "
           f"(default: deny)")
     for rule in engine.rules:
         print(f"  [{rule.effect:<14}] {rule.id}")
@@ -186,7 +186,7 @@ def cmd_policy(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="gea",
-        description="governed-edge-ai — governance controls that either fire, or do not.",
+        description="governed-edge-ai, governance controls that either fire, or do not.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)

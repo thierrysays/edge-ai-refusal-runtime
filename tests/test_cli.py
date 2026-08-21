@@ -1,4 +1,4 @@
-"""CLI tests — the path an auditor actually takes."""
+"""CLI tests, the path an auditor actually takes."""
 
 from __future__ import annotations
 

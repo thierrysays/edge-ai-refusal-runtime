@@ -1,4 +1,4 @@
-# ADR 0003 — A hash-chained file, not a database
+# ADR 0003, A hash-chained file, not a database
 
 **Status:** accepted · 2026-08-21
 
@@ -26,6 +26,6 @@ Verification is a separate function sharing no state with the writer.
 ## Cost
 
 Verification is O(n) in the file. Every append is `fsync`-ed, which caps write
-throughput at roughly the device's sync rate — acceptable at inference cadence,
+throughput at roughly the device's sync rate, acceptable at inference cadence,
 not at sensor cadence. High-rate telemetry belongs elsewhere; this journal is
 for governance events.

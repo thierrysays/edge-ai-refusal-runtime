@@ -6,7 +6,7 @@ choices are only legible while the reasons are still fresh.
 
 ---
 
-## 2026-08-21 — Day 1
+## 2026-08-21, Day 1
 
 ### Starting position
 
@@ -21,19 +21,19 @@ fleet. → ADR 0005.
 
 ### Order of construction
 
-1. `canonical.py` — before anything that would be hashed. Sorted keys, no
+1. `canonical.py`: before anything that would be hashed. Sorted keys, no
    insignificant whitespace, non-finite floats rejected. A digest is only as
    good as the determinism of the bytes beneath it.
-2. `clock.py` — injectable time. Evidence that cannot be replayed is anecdote.
-3. `registry/` — model card schema, Ed25519 signing, admission gate.
-4. `journal/` — Merkle helpers, then the chain, then the independent verifier.
-5. `policy/` — decisions, engine, budgets.
-6. `oversight/` — stop channels, supervisor.
-7. `marking/` — Article 50 provenance.
-8. `hal/` — simulated cell, then device profiles.
-9. `agent/` — the runtime that wires the five controls in order, then the
+2. `clock.py`: injectable time. Evidence that cannot be replayed is anecdote.
+3. `registry/`: model card schema, Ed25519 signing, admission gate.
+4. `journal/`: Merkle helpers, then the chain, then the independent verifier.
+5. `policy/`: decisions, engine, budgets.
+6. `oversight/`: stop channels, supervisor.
+7. `marking/`: Article 50 provenance.
+8. `hal/`: simulated cell, then device profiles.
+9. `agent/`: the runtime that wires the five controls in order, then the
    scenario.
-10. `cli.py` — produce evidence, check evidence, as separate commands.
+10. `cli.py`: produce evidence, check evidence, as separate commands.
 
 Tests were written alongside each module rather than after. The suite reached
 113 tests, of which the great majority are negative: a gate that admits a good
@@ -44,7 +44,7 @@ model proves nothing.
 First version of the signing envelope signed the model card directly. That is
 transplantable: a valid signature lifted from card A verifies against card A
 even when it is presented inside an envelope carrying card B, if the verifier is
-careless — and worse, it says nothing about *who* signed or *when*.
+careless, and worse, it says nothing about *who* signed or *when*.
 
 Replaced with a to-be-signed structure binding the card digest, the signer key
 id, and the signing timestamp. Roles are then resolved from the trust store at
@@ -56,7 +56,7 @@ the same time. `test_signature_cannot_be_transplanted_between_cards` and
 
 The provenance manifest initially carried the hash of the journal entry that
 recorded the inference. The journal entry carries the digest of the manifest.
-That is not merely awkward — it is uncomputable, and I only noticed after
+That is not merely awkward: it is uncomputable, and I only noticed after
 writing a `object.__setattr__` on a frozen dataclass to patch the manifest after
 the fact, which is the kind of code that should be read as an alarm rather than
 a workaround.
@@ -99,7 +99,7 @@ Both are recorded as accepted, not deferred:
   Encrypting them with a passphrase stored beside them would change the threat
   model not at all while creating the appearance that it had. → ADR 0006.
 - **No external anchoring.** Checkpoints are produced in exactly the form that
-  would close the truncation gap — a range, a root, a signature, no payload —
+  would close the truncation gap (a range, a root, a signature, no payload)
   and deliberately not transmitted, because the choice of witness belongs to
   whoever runs the fleet. → ADR 0007.
 

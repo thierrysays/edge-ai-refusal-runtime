@@ -7,7 +7,7 @@ Notable changes to this project. Format follows
 This file, not a git tag, is the authoritative record of what each release
 contains. A tag is a pointer; this is the statement.
 
-## [0.1.0] — 2026-08-21
+## [0.1.0], 2026-08-21
 
 First public release. Commit `b3922c5`.
 
@@ -17,31 +17,31 @@ independently of the process that wrote it.
 
 ### Added
 
-- **Admission gate** (`registry/`) — Ed25519-signed model cards checked before
+- **Admission gate** (`registry/`), Ed25519-signed model cards checked before
   anything loads. Eight named checks; a high-risk card needs two distinct signer
   roles, one of them `risk_officer`. Roles resolve from the trust store at
   verification time, never from the envelope.
-- **Inference journal** (`journal/`) — hash-chained JSONL with Merkle
+- **Inference journal** (`journal/`), hash-chained JSONL with Merkle
   checkpoints and an independent verifier that shares no state with the writer.
   Records carry digests, never payloads.
-- **Policy engine** (`policy/`) — default deny, rules as JSON data so a risk
+- **Policy engine** (`policy/`), default deny, rules as JSON data so a risk
   officer can diff what was in force on a given date. Booleans are excluded from
   numeric comparisons on purpose.
-- **Stop channel** (`oversight/`) — boots engaged; release requires a named
+- **Stop channel** (`oversight/`), boots engaged; release requires a named
   operator. `""` and `"unattended"` are refused.
-- **Budgets** (`policy/budget.py`) — exhaustion engages the stop rather than
+- **Budgets** (`policy/budget.py`), exhaustion engages the stop rather than
   merely declining the next request.
-- **Output marking** (`marking/`) — detached AI Act Article 50 provenance
+- **Output marking** (`marking/`), detached AI Act Article 50 provenance
   manifests carrying digests, so provenance can be published without disclosing
   the input.
 - **Device profiles** (`hal/devices.py`) for five Arduino boards. `uno-r4-wifi`
   deliberately lacks the inference journal, so a high-risk card is refused on it.
-- **Adversarial suite** (`tests/test_adversarial.py`) — 19 attacks on the
+- **Adversarial suite** (`tests/test_adversarial.py`), 19 attacks on the
   controls rather than exercises of them. `test_B4` passes deliberately, pinning
   the limitation ADR 0007 accepts.
-- **Quality gate** — `ruff`, `mypy --strict`, `bandit`, `pip-audit` and a
+- **Quality gate**: `ruff`, `mypy --strict`, `bandit`, `pip-audit` and a
   coverage floor, all failing the build in CI.
-- **Documentation** — getting started, architecture, functional specification,
+- **Documentation**: getting started, architecture, functional specification,
   technical reference, threat model, control map, ten ADRs, bilingual build log,
   and the pre-release audit.
 

@@ -37,7 +37,7 @@ class RuntimeContext:
 
     ``available_controls`` is the honest inventory of the runtime, not an
     aspiration. If ``stop_channel`` is absent because no relay is wired, a
-    high-risk card must not be admitted — which is exactly the situation the
+    high-risk card must not be admitted, which is exactly the situation the
     simulation backend is there to make visible before the hardware exists.
     """
 
@@ -136,7 +136,7 @@ def admit(
         trust_store: the closed set of acceptable signing keys.
         runtime: what this device can enforce.
         artifact_path: path to the model weights. If ``None``, the artefact
-            binding check is *failed*, not skipped — a card whose artefact was
+            binding check is *failed*, not skipped, a card whose artefact was
             never checked has not been checked.
         clock: injectable time source.
 

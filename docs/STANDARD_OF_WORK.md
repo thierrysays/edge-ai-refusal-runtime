@@ -1,6 +1,6 @@
 # The standard of work
 
-What "done" means in this repository and its siblings — `edge-ai-workbench` and
+What "done" means in this repository and its siblings, `edge-ai-workbench` and
 `governed-edge-ai`. It applies by default to every piece of work. Departures are
 stated in the pull request rather than discovered later by whoever inherits the
 code, and the gaps this repository currently has are listed at the bottom rather
@@ -18,7 +18,7 @@ have to reverse-engineer a format from an example. → `TECHNICAL_REFERENCE.md`
 
 **3. A neophyte path.** A route from a machine with nothing installed to a
 working result, assuming no Python, no terminal experience, and no prior
-context. Not a quickstart for colleagues — a guide for someone who has never
+context. Not a quickstart for colleagues, a guide for someone who has never
 done this. → `GETTING_STARTED.md`
 
 **4. A bare-metal path.** The same result on the actual hardware, from an
@@ -57,7 +57,7 @@ test, because neither is a thing a user does on purpose.
 
 The same distinction applies here with higher stakes. `tests/test_adversarial.py`
 is the security layer: it attacks the controls rather than exercising them. What
-is missing is the layer beneath it — nothing fuzzes the journal parser, the
+is missing is the layer beneath it, nothing fuzzes the journal parser, the
 canonical serialiser, or the model-card schema, and all three read attacker-
 influenced input.
 
@@ -80,7 +80,7 @@ mechanical and has not been done.
 **No fuzzer.** `verify_journal()` parses a file an auditor may have received
 from anywhere, and the schema validator parses model cards submitted by
 providers. Both deserve a deterministic mutation fuzzer asserting that every
-input produces either a valid structure or a named governance error — never a
+input produces either a valid structure or a named governance error, never a
 traceback, and never a silently accepted malformed record.
 
 **No repository-consistency layer.** Nothing fails the build when a link in the

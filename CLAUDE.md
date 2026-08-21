@@ -1,4 +1,4 @@
-# edge-ai-refusal-runtime — project instructions
+# edge-ai-refusal-runtime, project instructions
 
 A runtime that refuses to execute an AI model unless its paperwork holds, and
 refuses every actuation that no rule authorises. The product of this repository
@@ -17,7 +17,7 @@ python -m pytest tests/test_registry_admission.py -k stop_channel   # single tes
 ```
 
 `make demo` must always print **4 refused** and **1 escalated**. If it does not,
-something regressed — do not adjust the scenario to match the new output.
+something regressed, do not adjust the scenario to match the new output.
 
 ## Where things are
 
@@ -33,14 +33,14 @@ something regressed — do not adjust the scenario to match the new output.
 | `marking/` | AI Act Article 50 provenance |
 | `hal/` | Simulated cell + device profiles for the five boards |
 | `agent/runtime.py` | Wires the five controls **in order** |
-| `policies/` | Rule sets as data — diffable, versionable |
+| `policies/` | Rule sets as data, diffable, versionable |
 | `docs/CONTROL_MAP.md` | Claim → implementation → the test that proves it |
 | `docs/TECHNICAL_REFERENCE.md` | Module by module, and the shape of every artefact |
 | `docs/FUNCTIONAL_SPEC.md` | Actors, requirements, acceptance criteria |
 | `docs/THREAT_MODEL.md` | What is defended; residual risk R-1 to R-7 |
 | `tests/test_adversarial.py` | Attacks on the controls, not exercises of them |
 
-## Invariants — do not break these without an ADR
+## Invariants, do not break these without an ADR
 
 1. **The control order in `GovernedRuntime.act()` is load-bearing.** Stop channel
    → policy → human oversight → budgets → actuation. Never evaluate a request
@@ -52,11 +52,11 @@ something regressed — do not adjust the scenario to match the new output.
 4. **The default `Confirmer` is `AbsentOperator`, which refuses.** An escalation
    nobody answers is a refusal, never a permission.
 5. **`effective_controls()` returns the union** of the tier baseline and the
-   card's request — never the intersection. A provider cannot opt out by omission.
+   card's request, never the intersection. A provider cannot opt out by omission.
 6. **A missing artefact is a failed check, not a skipped one.**
 7. **Journal records carry digests, never payloads.** A CRA-retained technical
    file cannot contain the images.
-8. **`verify_journal()` shares no state with `Journal`.** Keep it that way — an
+8. **`verify_journal()` shares no state with `Journal`.** Keep it that way, an
    auditor runs it against a file on their own machine.
 9. **Device profiles are conservative.** `uno-r4-wifi` deliberately lacks
    `inference_journal`. Change a profile only after the capability is
@@ -80,7 +80,7 @@ seven test layers (smoke, unit, functional, security, QA, quality gate,
 pen-test), a threat model, and a bilingual build log entry. Departures are
 stated in the pull request.
 
-That document also lists where **this** repository currently falls short of it —
+That document also lists where **this** repository currently falls short of it,
 no bare-metal path, test layers not separable, no fuzzer over the journal and
 card parsers, no repository-consistency layer. Closing any of those is welcome
 work; pretending they are closed is not.
@@ -99,7 +99,7 @@ explain *why* a control exists and what it costs. That is the repository's main
 intellectual content; keep the register and do not strip it to one-liners.
 
 **One runtime dependency (`cryptography`).** Adding another needs a justification
-in the pull request — dependency weight is a governance property here.
+in the pull request, dependency weight is a governance property here.
 
 **ADRs are immutable.** A change a competent engineer could have made
 differently gets a new file in `docs/adr/` with its **cost** stated. Reversals
@@ -114,30 +114,30 @@ Deleting a test deletes the row.
   the escalation path and the defect-run stop. This is stated openly in a
   comment. Do not "clean it up" by removing the comment.
 - The provenance manifest must **not** carry the hash of the journal entry that
-  records the manifest's digest — that is uncomputable. The link runs
+  records the manifest's digest, that is uncomputable. The link runs
   journal → manifest, one way only.
 - Booleans are excluded from numeric policy comparisons on purpose (`True < 1.0`
   is true in Python and must not be true in a policy).
 - `test_truncation_is_detected_only_against_a_checkpoint` pins a **limitation**,
   not a feature. It is supposed to show that post-checkpoint truncation is
   undetectable from the file alone.
-- Rules are data. Do not "simplify" a rule into a Python callable — a risk
+- Rules are data. Do not "simplify" a rule into a Python callable, a risk
   officer must be able to diff what was in force on a given date.
 
-## Out of scope by design — do not "fix" these
+## Out of scope by design, do not "fix" these
 
 - **No hardware root of trust.** Keys sit in the clear. → ADR 0006. Do not add
   passphrase encryption with the passphrase stored beside it.
 - **No external anchoring of checkpoints.** The artefact is produced; the
   transmission belongs to whoever operates the fleet. → ADR 0007.
-- **`SimulatedModel` is a stand-in**, not a detector. Its two knobs — miss rate
-  and false-alarm rate — are the governance events that matter.
+- **`SimulatedModel` is a stand-in**, not a detector. Its two knobs (miss rate
+  and false-alarm rate) are the governance events that matter.
 - **The device profiles are capability, not job assignment.** `available_controls`
   records what a board *can* enforce, which is what the admission gate needs to
   know. It does not say which job that board holds in a rig. The sibling
   `governed-edge-ai` repository assigns the UNO Q the witness role and lets no
   board both decide and enforce; nothing here contradicts that, because nothing
-  here assigns roles at all. Do not "align" the two by narrowing a profile — a
+  here assigns roles at all. Do not "align" the two by narrowing a profile, a
   profile that understates a device is as wrong as one that overstates it.
 
 ## The next milestone
@@ -154,5 +154,5 @@ Nothing has run on hardware. In priority order:
    a Linux stall cannot keep the machine running.
 
 When a porting step lands, update `docs/BUILD_LOG.en.md` **and**
-`docs/BUILD_LOG.fr.md` — the build log is bilingual and both are part of the
+`docs/BUILD_LOG.fr.md`: the build log is bilingual and both are part of the
 deliverable.

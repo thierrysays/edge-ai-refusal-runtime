@@ -1,7 +1,7 @@
 """Budgets: the part of agent governance that policy rules cannot express.
 
 A rule set answers "is this action permitted?". It cannot answer "is this the
-four-hundredth permitted action in ninety seconds?" — and unbounded repetition
+four-hundredth permitted action in ninety seconds?", and unbounded repetition
 of individually-legitimate actions is how an autonomous system does damage
 without ever violating a rule.
 

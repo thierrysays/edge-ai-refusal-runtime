@@ -1,7 +1,7 @@
 # Control map
 
-Each row is a claim. Each claim has a test. Deleting the test deletes the claim
-— that is the whole discipline this document exists to enforce.
+Each row is a claim. Each claim has a test. Deleting the test deletes the claim.
+That is the whole discipline this document exists to enforce.
 
 Run `python -m pytest` to re-establish every row below.
 
@@ -16,7 +16,7 @@ Run `python -m pytest` to re-establish every row below.
 | A5 | Quorum counts distinct roles | Two signatures from the same role | ISO 27001 A.5.3 | `verify_envelope()` de-duplicates key ids | `test_duplicate_signature_from_one_key_does_not_inflate_the_quorum` |
 | A6 | Revocation is honoured | A card signed by a revoked key | NIST SP 800-57 | `TrustedKey.usable_at()` | `test_revoked_key_is_refused` |
 | A7 | Artefact binding | Weights that are not the weights the card describes | ISO 42001 §8.3; SLSA provenance | `digest_file()` compared to `artifact_digest` | `test_artefact_digest_mismatch_is_refused` |
-| A8 | Unchecked is not passed | A card admitted without the artefact ever being checked | — | absent artefact is a *failure*, not a skip | `test_absent_artefact_is_a_failure_not_a_skip` |
+| A8 | Unchecked is not passed | A card admitted without the artefact ever being checked |, | absent artefact is a *failure*, not a skip | `test_absent_artefact_is_a_failure_not_a_skip` |
 | A9 | Validity window | An expired card | AI Act Art. 17 (QMS) | `valid_from` / `valid_until` | `test_expired_card_is_refused` |
 | A10 | Deployment target | Running a model on a device it was not authorised for | ISO 42001 §8.4 | `deployment.targets` vs device class | `test_wrong_device_class_is_refused` |
 | A11 | Controls must be enforceable | A high-risk model on a device with no stop channel | **AI Act Art. 14** | `effective_controls()` ⊆ `RuntimeContext.available_controls` | `test_runtime_without_stop_channel_cannot_run_a_high_risk_model` |
@@ -47,8 +47,8 @@ Run `python -m pytest` to re-establish every row below.
 | P3 | Escalation ranks above allow | An allow that bypasses a required escalation | AI Act Art. 14 | `strongest()` | `test_require_human_overrides_allow_but_not_deny` |
 | P4 | Rules are data | A control an auditor cannot diff | COBIT MEA02; ISO 42001 §7.5 | JSON rule sets in `policies/` | `test_shipped_inspection_policy_loads_and_is_default_deny` |
 | P5 | Rules must explain themselves | An unexplained refusal (which gets overridden) | ISO 42001 §7.4 | `because` is mandatory, ≥ 8 chars | `test_invalid_policies_fail_at_load[…explain]` |
-| P6 | Typos fail loudly | A misspelt operator that silently never fires | — | eager operator validation at load | `test_invalid_policies_fail_at_load[…unknown operator]` |
-| P7 | No accidental coercion | `True < 1.0` evaluating as a numeric comparison | — | booleans excluded from numeric comparison | `test_boolean_is_not_a_number` |
+| P6 | Typos fail loudly | A misspelt operator that silently never fires |, | eager operator validation at load | `test_invalid_policies_fail_at_load[…unknown operator]` |
+| P7 | No accidental coercion | `True < 1.0` evaluating as a numeric comparison |, | booleans excluded from numeric comparison | `test_boolean_is_not_a_number` |
 | P8 | Operating envelope | Speeds outside the card's validated range | AI Act Art. 15 (accuracy/robustness) | `deny-excessive-speed` | `test_speed_outside_the_declared_envelope_never_reaches_the_device` |
 | P9 | Scope containment | Actions on systems this runtime was not authorised for | ISO 27001 A.8.2 | `deny-foreign-targets` | `test_foreign_targets_are_refused` |
 | P10 | Reviewability | An action with no stated rationale | ISO 42001 §9.2 | `deny-unexplained-requests` | `test_an_unexplained_action_is_refused` |
@@ -71,8 +71,8 @@ Run `python -m pytest` to re-establish every row below.
 | # | Control | Refuses | Framework | Implementation | Test |
 |---|---|---|---|---|---|
 | B1 | Allocation is finite | Unbounded repetition of legitimate actions | NIST AI RMF MANAGE 2.3 | `BudgetLedger` | `test_budget_exhaustion_stops_the_cell` |
-| B2 | Undeclared resources | An agent inventing a resource name and spending freely | — | unknown kind → refusal | `test_undeclared_budget_is_refused` |
-| B3 | Atomicity | A partial spend leaving a ledger that does not reconcile | — | `consume_many()` all-or-nothing | `test_consume_many_is_all_or_nothing` |
+| B2 | Undeclared resources | An agent inventing a resource name and spending freely |, | unknown kind → refusal | `test_undeclared_budget_is_refused` |
+| B3 | Atomicity | A partial spend leaving a ledger that does not reconcile |, | `consume_many()` all-or-nothing | `test_consume_many_is_all_or_nothing` |
 | B4 | Exhaustion stops | Degrading gracefully past the allocation | AI Act Art. 14 | exhaustion engages the stop channel | `test_budget_exhaustion_stops_the_cell` |
 | B5 | Independent dimensions | Energy spent under cover of an action count | Green Software SCI | separate limits per kind | `test_energy_budget_is_enforced_separately` |
 
@@ -80,7 +80,7 @@ Run `python -m pytest` to re-establish every row below.
 
 | # | Control | Refuses | Framework | Implementation | Test |
 |---|---|---|---|---|---|
-| T1 | Machine-readable marking | Unmarked synthetic output | **AI Act Art. 50(2) — applicable since 2 Aug 2026; grace period to 2 Dec 2026 for systems already on the market before that date** | `OutputMarker.mark()` | `test_marking_binds_the_output` |
+| T1 | Machine-readable marking | Unmarked synthetic output | **AI Act Art. 50(2), applicable since 2 Aug 2026; grace period to 2 Dec 2026 for systems already on the market before that date** | `OutputMarker.mark()` | `test_marking_binds_the_output` |
 | T2 | Marking is checkable | A marking nobody downstream can verify | AI Act Art. 50 | `verify_marking()` | `test_marking_does_not_validate_a_different_output` |
 | T3 | Provenance without disclosure | Having to publish the input to prove the provenance | GDPR Art. 5(1)(c) | manifest carries digests only | `test_manifest_carries_no_payload` |
 | T4 | Human-readable disclosure | A marking only a machine can read | AI Act Art. 50 | `disclosure_text` from the card | `test_marking_binds_the_output` |

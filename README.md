@@ -50,7 +50,7 @@ from a decorative one.
 | Control | What it refuses | Where |
 |---|---|---|
 | **Admission gate** | A model whose card is unsigned, under-signed, expired, bound to a different artefact, or requiring a control this device cannot enforce | `registry/admission.py` |
-| **Inference journal** | Nothing — it makes alteration *detectable*, naming the sequence number where a chain was edited, deleted, or reordered | `journal/chain.py` |
+| **Inference journal** | Nothing, it makes alteration *detectable*, naming the sequence number where a chain was edited, deleted, or reordered | `journal/chain.py` |
 | **Policy mediation** | Any actuation no rule authorises (default deny), plus anything a deny rule matches | `policy/engine.py` |
 | **Stop channel** | Every action while engaged; starts engaged, released only by a named operator | `oversight/killswitch.py` |
 | **Budgets** | Individually-legitimate actions repeated past an allocation; exhaustion engages the stop | `policy/budget.py` |
@@ -92,13 +92,13 @@ stopped reading after the headline.
 
 | Obligation | Status as of August 2026 | Implemented as |
 |---|---|---|
-| **AI Act Art. 50** — transparency, marking of synthetic output | **Applicable since 2 August 2026.** Not deferred; Art. 50(2) machine-readable marking has a grace period to 2 December 2026 for systems already on the market. | `marking/` |
-| **AI Act Art. 12** — automatic logging over the lifetime | Annex III duties deferred to **2 December 2027**; the design cost of building logging late is not deferred | `journal/` |
-| **AI Act Art. 14** — human oversight, stop button or similar | Same deferral; same argument | `oversight/` |
-| **AI Act Annex IV** — technical documentation | Same deferral | signed model card, `registry/schema.py` |
-| **ISO/IEC 42001** — AI management system, AI system records | In force, certifiable now | model card as the system record |
-| **ISO/IEC 27001 A.8.15** — protection of log information | In force | hash chain + signed checkpoints |
-| **CRA** — SBOM, vulnerability handling | Reporting from **11 September 2026**, full application **11 December 2027** | *separate repository — see the CRA track* |
+| **AI Act Art. 50**: transparency, marking of synthetic output | **Applicable since 2 August 2026.** Not deferred; Art. 50(2) machine-readable marking has a grace period to 2 December 2026 for systems already on the market. | `marking/` |
+| **AI Act Art. 12**: automatic logging over the lifetime | Annex III duties deferred to **2 December 2027**; the design cost of building logging late is not deferred | `journal/` |
+| **AI Act Art. 14**: human oversight, stop button or similar | Same deferral; same argument | `oversight/` |
+| **AI Act Annex IV**: technical documentation | Same deferral | signed model card, `registry/schema.py` |
+| **ISO/IEC 42001**: AI management system, AI system records | In force, certifiable now | model card as the system record |
+| **ISO/IEC 27001 A.8.15**: protection of log information | In force | hash chain + signed checkpoints |
+| **CRA**: SBOM, vulnerability handling | Reporting from **11 September 2026**, full application **11 December 2027** | *separate repository, see the CRA track* |
 
 The Digital Omnibus on AI is **law, not a proposal**. Provisional agreement was
 reached on 7 May 2026; it was published in the Official Journal on 24 July 2026
@@ -112,7 +112,7 @@ generative systems already on the market before that date have until
 50(2). Everything else in Article 50 is already enforceable.
 
 The practical consequence is that the *transparency* work is late already and
-the *oversight* work has until December 2027 — which is roughly how long it
+the *oversight* work has until December 2027, which is roughly how long it
 takes to retrofit a stop channel into a fleet that was not designed for one.
 
 ## Hardware
@@ -125,7 +125,7 @@ target can actually enforce, and the admission gate consults that declaration.
 |---|---|---|
 | `ventuno-q` | all five | Dragonwing IQ8 (~40 TOPS) + STM32H5 on Zephyr; the stop channel belongs on the microcontroller so a kernel stall cannot keep the machine running |
 | `uno-q` | all five | Dragonwing QRB2210 + STM32U585, Debian; journal on eMMC, Modulino relay over Qwiic |
-| `uno-r4-wifi` | four — **not** the journal | a microcontroller, not a computer: no durable append-only storage, so a high-risk card is *refused* on it |
+| `uno-r4-wifi` | four, **not** the journal | a microcontroller, not a computer: no durable append-only storage, so a high-risk card is *refused* on it |
 | `alvik` | policy, stop | the actuated system for oversight demos, and the STEM platform |
 | `nesso-n1` | confirmation, stop | oversight console over LoRa: an approval path that survives the failure of the main network |
 
@@ -142,8 +142,8 @@ suite pins that behaviour.
 - **Not a hardware root of trust.** Signing keys sit in the clear on a Linux
   SBC. Attestation without a secure element is theatre, and saying so is part of
   the deliverable. → [ADR 0006](docs/adr/0006-no-hardware-root-of-trust.md)
-- **Not a model.** `SimulatedModel` is a stand-in with two knobs — miss rate and
-  false-alarm rate — because those are the two governance events that matter,
+- **Not a model.** `SimulatedModel` is a stand-in with two knobs (miss rate and
+  false-alarm rate) because those are the two governance events that matter,
   not the accuracy number.
 - **Not a compliance certificate.** Nothing here certifies anything. It
   demonstrates that specific controls can be made to fire, and shows the cost.
@@ -162,7 +162,7 @@ two share an author, a licence, a regulatory frame and a target inventory. They
 share no code and no history, which is why they are two repositories rather than
 one.
 
-`cra-in-a-box` is the third: the Cyber Resilience Act chain end to end — SBOM,
+`cra-in-a-box` is the third: the Cyber Resilience Act chain end to end, SBOM,
 VEX, scan, Article 14 reporting, signed update, Annex VII pack. It is the
 repository the CRA row in the table above defers to.
 
@@ -178,7 +178,7 @@ Two names in this repository do **not** match its slug. The import package is
 are frozen: `journal-record/v1` sits inside every hashed record and `tbs/v1`
 inside every signed payload, so changing the string would invalidate every
 signature made before the change. A journal retained for five years has to stay
-verifiable by someone holding the file and not the repository — across renames,
+verifiable by someone holding the file and not the repository, across renames,
 forks, and the disappearance of whoever published it. An identifier that tracks
 a repository name is one that breaks when the repository is renamed.
 → [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md)
@@ -187,7 +187,7 @@ a repository name is one that breaks when the repository is renamed.
 
 ```
 src/governed_edge_ai/
-  canonical.py     canonical JSON + digests — every artefact is hashed here or nowhere
+  canonical.py     canonical JSON + digests, every artefact is hashed here or nowhere
   clock.py         injectable time, so evidence is reproducible
   errors.py        one exception per governance failure mode
   registry/        model card schema, Ed25519 signing, admission gate
@@ -203,20 +203,20 @@ docs/              architecture, control map, ADRs, build log
 
 ## Documentation
 
-- [**Changelog**](CHANGELOG.md) — what each release contains, and what it does not
-- [**Getting started**](docs/GETTING_STARTED.md) — from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
-- [Architecture](docs/ARCHITECTURE.md) — the five controls and why they are ordered as they are
-- [Functional specification](docs/FUNCTIONAL_SPEC.md) — actors, requirements, and what counts as the build being good
-- [Technical reference](docs/TECHNICAL_REFERENCE.md) — module by module, with the shape of every artefact
-- [Threat model](docs/THREAT_MODEL.md) — what is defended, and the residual risk that is accepted rather than overlooked
-- [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md) — an external review at v0.1.0, with what it found
-- [Standard of work](docs/STANDARD_OF_WORK.md) — what "done" means here, and where this repository falls short of it
-- [Control map](docs/CONTROL_MAP.md) — each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
-- [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)) — what was built, in what order, and what was wrong on the way
-- [Architecture decisions](docs/adr/) — including the three uncomfortable ones
-- [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md) — why the repository was renamed and the schema identifiers were not
-- [Security policy](SECURITY.md) — private reporting, and what is out of scope by design
-- [Contributing](CONTRIBUTING.md) — every claim needs a test that fails without it
+- [**Changelog**](CHANGELOG.md), what each release contains, and what it does not
+- [**Getting started**](docs/GETTING_STARTED.md), from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
+- [Architecture](docs/ARCHITECTURE.md), the five controls and why they are ordered as they are
+- [Functional specification](docs/FUNCTIONAL_SPEC.md), actors, requirements, and what counts as the build being good
+- [Technical reference](docs/TECHNICAL_REFERENCE.md), module by module, with the shape of every artefact
+- [Threat model](docs/THREAT_MODEL.md), what is defended, and the residual risk that is accepted rather than overlooked
+- [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md), an external review at v0.1.0, with what it found
+- [Standard of work](docs/STANDARD_OF_WORK.md), what "done" means here, and where this repository falls short of it
+- [Control map](docs/CONTROL_MAP.md), each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
+- [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)), what was built, in what order, and what was wrong on the way
+- [Architecture decisions](docs/adr/), including the three uncomfortable ones
+- [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md), why the repository was renamed and the schema identifiers were not
+- [Security policy](SECURITY.md), private reporting, and what is out of scope by design
+- [Contributing](CONTRIBUTING.md), every claim needs a test that fails without it
 
 ## Tests
 
@@ -233,7 +233,7 @@ nothing; a gate that admits a bad one manufactures assurance. Every refusal
 claimed in the control map has a test, and deleting the test deletes the claim.
 
 `tests/test_adversarial.py` is the other half: it attacks the controls rather
-than exercising them — signature transplant, key substitution,
+than exercising them, signature transplant, key substitution,
 quorum-by-repetition, algorithm confusion, chain reordering, canonicalisation
 collisions. One of its tests passes *on purpose*, asserting that a consistent
 forgery by the holder of the device key is undetectable from the file. That is
