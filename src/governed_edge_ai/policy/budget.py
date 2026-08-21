@@ -50,7 +50,7 @@ class BudgetLedger:
                 raise ConfigurationError(f"limit {name!r} must be numeric")
             if limit < 0:
                 raise ConfigurationError(f"limit {name!r} must not be negative")
-        self._spent = {name: 0.0 for name in self.limits}
+        self._spent = dict.fromkeys(self.limits, 0.0)
         self._window_start = self.clock.now()
 
     # ------------------------------------------------------------------ windows
@@ -59,7 +59,7 @@ class BudgetLedger:
             return
         elapsed = (self.clock.now() - self._window_start).total_seconds()
         if elapsed >= self.window_seconds:
-            self._spent = {name: 0.0 for name in self.limits}
+            self._spent = dict.fromkeys(self.limits, 0.0)
             self._window_start = self.clock.now()
             self._renewals += 1
 

@@ -8,7 +8,6 @@ from governed_edge_ai.errors import ConfigurationError
 from governed_edge_ai.hal.sim import SimulatedRelay
 from governed_edge_ai.marking import OutputMarker, verify_marking
 from governed_edge_ai.oversight import (
-    AbsentOperator,
     CompositeStopChannel,
     HardwareStopChannel,
     HeartbeatStopChannel,

@@ -32,10 +32,10 @@ from ..clock import Clock, SystemClock, iso
 from ..errors import AdmissionDenied, BudgetExhausted
 from ..journal import Journal
 from ..marking import MarkedOutput, OutputMarker
+from ..oversight import Supervisor
 from ..policy import ActuationRequest, BudgetLedger, Decision, PolicyEngine
 from ..registry import RuntimeContext, TrustStore, admit
 from ..registry.admission import AdmissionDecision
-from ..oversight import Supervisor
 
 
 @dataclass(frozen=True)

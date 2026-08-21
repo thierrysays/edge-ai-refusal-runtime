@@ -168,7 +168,7 @@ def validate_card(card: Any) -> dict[str, Any]:
             "a high-risk card must declare at least one out-of-scope use",
         )
 
-    return card
+    return dict(card)
 
 
 def effective_controls(card: dict[str, Any]) -> tuple[str, ...]:

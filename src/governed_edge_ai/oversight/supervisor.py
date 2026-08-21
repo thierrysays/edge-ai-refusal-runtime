@@ -39,7 +39,9 @@ class AbsentOperator:
 
     name: str = "absent"
 
-    def confirm(self, request_summary, reasons):  # noqa: D102, ANN001
+    def confirm(
+        self, request_summary: dict[str, Any], reasons: tuple[str, ...]
+    ) -> tuple[bool, str]:
         return False, "unattended"
 
 
@@ -55,7 +57,9 @@ class CallbackConfirmer:
     operator_id: str
     name: str = "callback"
 
-    def confirm(self, request_summary, reasons):  # noqa: ANN001
+    def confirm(
+        self, request_summary: dict[str, Any], reasons: tuple[str, ...]
+    ) -> tuple[bool, str]:
         approved = bool(self.callback(request_summary, reasons))
         return approved, self.operator_id
 
@@ -69,7 +73,9 @@ class ScriptedConfirmer:
     name: str = "scripted"
     _index: int = field(default=0, init=False)
 
-    def confirm(self, request_summary, reasons):  # noqa: ANN001
+    def confirm(
+        self, request_summary: dict[str, Any], reasons: tuple[str, ...]
+    ) -> tuple[bool, str]:
         if self._index >= len(self.answers):
             # Running out of scripted answers means the operator went away.
             return False, "unattended"

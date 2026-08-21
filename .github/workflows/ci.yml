@@ -35,3 +35,29 @@ jobs:
         with:
           name: evidence
           path: run/
+
+  qa:
+    # Lint, types and SAST are a gate, not advice. They run on one interpreter:
+    # a style or typing finding does not vary by Python version, and running
+    # them three times only makes the log longer.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Upgrade the build toolchain before auditing: pip and setuptools carry
+      # their own advisories, and a gate that fails on the runner image rather
+      # than on this repository trains people to ignore it.
+      - run: python -m pip install -U pip setuptools
+      - run: pip install -e ".[dev]"
+      - name: lint
+        run: python -m ruff check src tests
+      - name: types
+        run: python -m mypy
+      - name: SAST
+        run: python -m bandit -q -r src
+      - name: dependency advisories
+        run: python -m pip_audit --progress-spinner off
+      - name: coverage gate
+        run: python -m pytest --cov --cov-report=term-missing

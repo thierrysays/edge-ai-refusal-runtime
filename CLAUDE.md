@@ -11,6 +11,7 @@ pip install -e ".[dev]"
 make test          # 113 tests, ~0.5s
 make demo          # deterministic scenario -> ./run
 make verify        # independent journal verification
+make qa            # lint, strict types, SAST, dependency advisories, coverage gate
 make tamper        # edits the journal, shows verification naming the break
 python -m pytest tests/test_registry_admission.py -k stop_channel   # single test
 ```
@@ -34,6 +35,10 @@ something regressed — do not adjust the scenario to match the new output.
 | `agent/runtime.py` | Wires the five controls **in order** |
 | `policies/` | Rule sets as data — diffable, versionable |
 | `docs/CONTROL_MAP.md` | Claim → implementation → the test that proves it |
+| `docs/TECHNICAL_REFERENCE.md` | Module by module, and the shape of every artefact |
+| `docs/FUNCTIONAL_SPEC.md` | Actors, requirements, acceptance criteria |
+| `docs/THREAT_MODEL.md` | What is defended; residual risk R-1 to R-7 |
+| `tests/test_adversarial.py` | Attacks on the controls, not exercises of them |
 
 ## Invariants — do not break these without an ADR
 

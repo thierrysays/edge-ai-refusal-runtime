@@ -1,4 +1,4 @@
-.PHONY: install test demo verify lint clean
+.PHONY: lint typecheck security audit qa install test demo verify lint clean
 
 install:
 	pip install -e ".[dev]"
@@ -26,3 +26,23 @@ open(p,'w').writelines(json.dumps(r,sort_keys=True,separators=(',',':'))+'\n' fo
 
 clean:
 	rm -rf run build dist .pytest_cache **/__pycache__ *.egg-info
+
+# --------------------------------------------------------------- quality gate
+# `make qa` is what CI runs. Everything in it fails the build; nothing in it
+# prints a warning and continues, because a warning nobody must act on is a
+# warning nobody reads.
+
+lint:
+	python -m ruff check src tests
+
+typecheck:
+	python -m mypy
+
+security:
+	python -m bandit -q -r src
+	python -m pip_audit --progress-spinner off
+
+cover:
+	python -m pytest --cov --cov-report=term-missing
+
+qa: lint typecheck security cover

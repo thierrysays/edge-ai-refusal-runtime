@@ -193,6 +193,10 @@ docs/              architecture, control map, ADRs, build log
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md) — the five controls and why they are ordered as they are
+- [Functional specification](docs/FUNCTIONAL_SPEC.md) — actors, requirements, and what counts as the build being good
+- [Technical reference](docs/TECHNICAL_REFERENCE.md) — module by module, with the shape of every artefact
+- [Threat model](docs/THREAT_MODEL.md) — what is defended, and the residual risk that is accepted rather than overlooked
+- [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md) — an external review at v0.1.0, with what it found
 - [Control map](docs/CONTROL_MAP.md) — each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
 - [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)) — what was built, in what order, and what was wrong on the way
 - [Architecture decisions](docs/adr/) — including the three uncomfortable ones
@@ -203,12 +207,24 @@ docs/              architecture, control map, ADRs, build log
 ## Tests
 
 ```
-python -m pytest        # 113 tests
+python -m pytest        # the suite
+make qa                 # lint, strict types, SAST, dependency advisories, coverage gate
 ```
+
+`make qa` is what CI runs, and everything in it fails the build. A convention
+that is not machine-checked is a preference, and preferences drift.
 
 The negative tests are the point. A gate that admits a good model proves
 nothing; a gate that admits a bad one manufactures assurance. Every refusal
 claimed in the control map has a test, and deleting the test deletes the claim.
+
+`tests/test_adversarial.py` is the other half: it attacks the controls rather
+than exercising them — signature transplant, key substitution,
+quorum-by-repetition, algorithm confusion, chain reordering, canonicalisation
+collisions. One of its tests passes *on purpose*, asserting that a consistent
+forgery by the holder of the device key is undetectable from the file. That is
+the limitation ADR 0007 accepts, and a test is the only place a limitation
+stays honest.
 
 ## Licence
 

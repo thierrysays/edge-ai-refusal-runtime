@@ -81,7 +81,7 @@ class OutputMarker:
     ) -> MarkedOutput:
         """Produce the manifest and disclosure for one output."""
         output_digest = (
-            digest_bytes(output) if isinstance(output, (bytes, bytearray))
+            digest_bytes(bytes(output)) if isinstance(output, (bytes, bytearray))
             else digest(output)
         )
         manifest = {
@@ -119,7 +119,7 @@ def verify_marking(manifest: Any, output: Any) -> tuple[bool, str]:
         if field not in manifest:
             return False, f"manifest missing {field!r}"
     expected = (
-        digest_bytes(output) if isinstance(output, (bytes, bytearray)) else digest(output)
+        digest_bytes(bytes(output)) if isinstance(output, (bytes, bytearray)) else digest(output)
     )
     if manifest["output_digest"] != expected:
         return False, "manifest does not describe this output (digest mismatch)"

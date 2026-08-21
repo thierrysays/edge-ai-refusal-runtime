@@ -20,7 +20,7 @@ Design commitments:
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Sequence
 
@@ -51,7 +51,9 @@ class RuntimeContext:
             raise ConfigurationError(f"runtime declares unknown controls: {unknown}")
 
     @classmethod
-    def of(cls, device_class: str, *controls: str, operator_id: str = "unattended"):
+    def of(
+        cls, device_class: str, *controls: str, operator_id: str = "unattended"
+    ) -> "RuntimeContext":
         return cls(
             device_class=device_class,
             available_controls=frozenset(controls),

@@ -18,7 +18,7 @@ keywords = ["ai-governance", "edge-ai", "eu-ai-act", "iso-42001", "arduino"]
 dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10", "bandit>=1.7", "pip-audit>=2.7"]
 
 [project.scripts]
 gea = "governed_edge_ai.cli:main"
@@ -30,3 +30,49 @@ where = ["src"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-q"
+
+# ---------------------------------------------------------------- quality gate
+# The gate is deliberately boring and deliberately enforced in CI. A convention
+# that is not machine-checked is a preference, and preferences drift.
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# F and I are errors: an unused import or a shadowed name is a defect in a
+# repository whose subject is knowing exactly what is loaded. B and S are the
+# bug and security rule sets. The path-handling (PTH) and style-modernisation
+# (UP) sets are deliberately NOT enabled — they would churn working code
+# without changing behaviour, and this repository has no spare credibility to
+# spend on a diff nobody asked for.
+select = ["E", "F", "W", "I", "B", "S", "C4", "SIM", "RET"]
+ignore = ["E501", "SIM108", "RET504"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests assert; that is their job.
+"tests/*" = ["S101", "SIM115"]
+
+[tool.mypy]
+strict = true
+files = ["src"]
+warn_unused_ignores = true
+warn_unreachable = true
+
+[tool.coverage.run]
+branch = true
+source = ["src/governed_edge_ai"]
+
+[tool.coverage.report]
+# 90, not 98. The sibling `governed-edge-ai` repository holds 98 % and this one
+# does not yet; setting the gate where the code actually is means it fails when
+# coverage *drops*, which is the only thing a gate is for. Raising it is a
+# tracked item, not a number to assert in advance.
+fail_under = 90
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "\\.\\.\\.",
+]

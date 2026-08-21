@@ -35,9 +35,9 @@ _OPERATORS = ("eq", "ne", "gt", "gte", "lt", "lte", "in", "not_in", "matches", "
 
 def _compare(operator: str, actual: Any, expected: Any) -> bool:
     if operator == "eq":
-        return actual == expected
+        return bool(actual == expected)
     if operator == "ne":
-        return actual != expected
+        return bool(actual != expected)
     if operator in ("gt", "gte", "lt", "lte"):
         if not isinstance(actual, (int, float)) or isinstance(actual, bool):
             return False

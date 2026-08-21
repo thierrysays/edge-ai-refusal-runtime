@@ -239,8 +239,30 @@ class Journal:
 
 def read_journal(path: str) -> Iterator[Entry]:
     """Yield entries from a journal file, in file order."""
-    with open(path, "r", encoding="utf-8") as handle:
-        for line_number, line in enumerate(handle, start=1):
+    try:
+        # noqa justified: the open must be guarded on its own so an OSError
+        # becomes a stated refusal before the with-block; the handle is closed
+        # by the `with` immediately below.
+        handle = open(path, "r", encoding="utf-8")  # noqa: SIM115
+    except OSError as exc:
+        # A directory, a broken symlink, a permission problem. An auditor who
+        # points the verifier at the wrong path gets a refusal with the reason,
+        # not a stack trace: a tool that crashes has not verified anything, and
+        # should not look like it fell over rather than found something.
+        raise JournalIntegrityError(f"cannot read journal: {exc}") from exc
+    with handle:
+        line_number = 0
+        while True:
+            try:
+                line = handle.readline()
+            except UnicodeDecodeError as exc:
+                # Not a text file at all. Same argument as above.
+                raise JournalIntegrityError(
+                    f"journal is not UTF-8 text at line {line_number + 1}: {exc}"
+                ) from exc
+            if not line:
+                break
+            line_number += 1
             line = line.strip()
             if not line:
                 continue
@@ -282,6 +304,11 @@ def verify_journal(path: str, trust_store: TrustStore | None = None) -> Verifica
         return VerificationReport(
             ok=False, entries=0, checkpoints=0, head=GENESIS_HASH,
             broken_at=None, reasons=(f"journal not found: {path}",),
+        )
+    if not os.path.isfile(path):
+        return VerificationReport(
+            ok=False, entries=0, checkpoints=0, head=GENESIS_HASH,
+            broken_at=None, reasons=(f"journal path is not a file: {path}",),
         )
 
     expected_prev = GENESIS_HASH
@@ -337,6 +364,20 @@ def verify_journal(path: str, trust_store: TrustStore | None = None) -> Verifica
             False, count, checkpoints, head, expected_seq, (str(exc),)
         )
 
+    if count == 0:
+        # An empty file and a completely erased one are the same bytes. The
+        # verifier cannot tell them apart and must not affirm either: saying
+        # "verified" about nothing is the manufactured assurance this project
+        # exists to refuse. Detecting *which* of the two it is needs an external
+        # record of the expected head — see ADR 0007.
+        return VerificationReport(
+            ok=False, entries=0, checkpoints=checkpoints, head=GENESIS_HASH,
+            broken_at=None,
+            reasons=(
+                "journal is empty: nothing to verify, and an empty file is "
+                "indistinguishable from an erased one",
+            ),
+        )
     return VerificationReport(True, count, checkpoints, head)
 
 

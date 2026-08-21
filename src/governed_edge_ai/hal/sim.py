@@ -96,7 +96,10 @@ class SimulatedCell:
 
     def __init__(self, *, seed: int = 20260821, defect_rate: float = 0.25) -> None:
         self.relay = SimulatedRelay()
-        self._rng = random.Random(seed)
+        # Seeded and reproducible on purpose: this generator draws which parts
+        # are defective in a simulation. It is never used for key material,
+        # nonces, or anything an adversary benefits from predicting.
+        self._rng = random.Random(seed)  # noqa: S311  # nosec B311
         self._defect_rate = defect_rate
         self._counter = 0
         self.speed = 0.0
@@ -193,7 +196,9 @@ class SimulatedModel:
     def __init__(
         self, *, seed: int = 7, miss_rate: float = 0.0, false_alarm_rate: float = 0.0
     ) -> None:
-        self._rng = random.Random(seed)
+        # As above: this draws misses and false alarms, which are the two
+        # governance events the stand-in model exists to produce.
+        self._rng = random.Random(seed)  # noqa: S311  # nosec B311
         self.miss_rate = miss_rate
         self.false_alarm_rate = false_alarm_rate
 
