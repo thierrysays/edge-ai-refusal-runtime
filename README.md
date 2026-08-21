@@ -20,6 +20,9 @@ gea demo --out ./run
 gea verify --journal ./run/journal.jsonl --trust-store ./run/trust-store.json
 ```
 
+Never used Python or a terminal? [**Getting started**](docs/GETTING_STARTED.md)
+assumes nothing and takes about twenty minutes.
+
 ```
   inferences   : 10
   requests     : 11
@@ -89,7 +92,7 @@ stopped reading after the headline.
 
 | Obligation | Status as of August 2026 | Implemented as |
 |---|---|---|
-| **AI Act Art. 50** — transparency, marking of synthetic output | **Applicable since 2 August 2026.** Not deferred. | `marking/` |
+| **AI Act Art. 50** — transparency, marking of synthetic output | **Applicable since 2 August 2026.** Not deferred; Art. 50(2) machine-readable marking has a grace period to 2 December 2026 for systems already on the market. | `marking/` |
 | **AI Act Art. 12** — automatic logging over the lifetime | Annex III duties deferred to **2 December 2027**; the design cost of building logging late is not deferred | `journal/` |
 | **AI Act Art. 14** — human oversight, stop button or similar | Same deferral; same argument | `oversight/` |
 | **AI Act Annex IV** — technical documentation | Same deferral | signed model card, `registry/schema.py` |
@@ -97,12 +100,20 @@ stopped reading after the headline.
 | **ISO/IEC 27001 A.8.15** — protection of log information | In force | hash chain + signed checkpoints |
 | **CRA** — SBOM, vulnerability handling | Reporting from **11 September 2026**, full application **11 December 2027** | *separate repository — see the CRA track* |
 
-The Digital Omnibus, politically agreed on 6 May 2026, pushed Annex III
-high-risk obligations to 2 December 2027 and Annex I to 2 August 2028. Article
-50 kept its original date. The practical consequence is that the *transparency*
-work is late already and the *oversight* work has eighteen months — which is
-roughly how long it takes to retrofit a stop channel into a fleet that was not
-designed for one.
+The Digital Omnibus on AI is **law, not a proposal**. Provisional agreement was
+reached on 7 May 2026; it was published in the Official Journal on 24 July 2026
+and entered into force on 27 July. It pushed Annex III high-risk obligations to
+2 December 2027 and Annex I to 2 August 2028.
+
+**Article 50 was left out of that deferral** and applied on schedule from
+2 August 2026. One carve-out is worth knowing if you are reading `marking/`:
+generative systems already on the market before that date have until
+**2 December 2026** to meet the machine-readable marking requirement in Article
+50(2). Everything else in Article 50 is already enforceable.
+
+The practical consequence is that the *transparency* work is late already and
+the *oversight* work has until December 2027 — which is roughly how long it
+takes to retrofit a stop channel into a fleet that was not designed for one.
 
 ## Hardware
 
@@ -192,6 +203,7 @@ docs/              architecture, control map, ADRs, build log
 
 ## Documentation
 
+- [**Getting started**](docs/GETTING_STARTED.md) — from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
 - [Architecture](docs/ARCHITECTURE.md) — the five controls and why they are ordered as they are
 - [Functional specification](docs/FUNCTIONAL_SPEC.md) — actors, requirements, and what counts as the build being good
 - [Technical reference](docs/TECHNICAL_REFERENCE.md) — module by module, with the shape of every artefact

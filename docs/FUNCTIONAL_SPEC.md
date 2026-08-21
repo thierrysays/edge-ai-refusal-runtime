@@ -108,7 +108,10 @@ or reordered.
 
 Where a card declares it, each output gets a detached provenance manifest
 carrying digests rather than payloads, so provenance can be published without
-disclosing the input. (AI Act Article 50, applicable since 2 August 2026.)
+disclosing the input. (AI Act Article 50, applicable since 2 August 2026. The
+machine-readable half — Article 50(2) — has a grace period to 2 December 2026
+for generative systems already on the market before 2 August; the human-readable
+disclosure did not.)
 
 ### FR-9 — Refusal survives adversarial pressure
 
@@ -146,8 +149,8 @@ Full detail, with the test that proves each row, in
 
 | Obligation | Status as of August 2026 | Implemented as |
 |---|---|---|
-| AI Act Art. 50 — marking of synthetic output | **Applicable since 2 August 2026** | `marking/` |
-| AI Act Art. 12 — automatic logging | Annex III duties deferred to 2 December 2027 | `journal/` |
+| AI Act Art. 50 — marking of synthetic output | **Applicable since 2 August 2026**; Art. 50(2) grace period to 2 Dec 2026 for pre-existing systems | `marking/` |
+| AI Act Art. 12 — automatic logging | Annex III duties deferred to 2 December 2027 by the Digital Omnibus, in force 27 July 2026 | `journal/` |
 | AI Act Art. 14 — human oversight | Same deferral | `oversight/` |
 | AI Act Annex IV — technical documentation | Same deferral | signed model card |
 | ISO/IEC 42001 — AI management system | In force | card as the system record |

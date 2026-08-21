@@ -80,7 +80,7 @@ Run `python -m pytest` to re-establish every row below.
 
 | # | Control | Refuses | Framework | Implementation | Test |
 |---|---|---|---|---|---|
-| T1 | Machine-readable marking | Unmarked synthetic output | **AI Act Art. 50 — applicable since 2 Aug 2026** | `OutputMarker.mark()` | `test_marking_binds_the_output` |
+| T1 | Machine-readable marking | Unmarked synthetic output | **AI Act Art. 50(2) — applicable since 2 Aug 2026; grace period to 2 Dec 2026 for systems already on the market before that date** | `OutputMarker.mark()` | `test_marking_binds_the_output` |
 | T2 | Marking is checkable | A marking nobody downstream can verify | AI Act Art. 50 | `verify_marking()` | `test_marking_does_not_validate_a_different_output` |
 | T3 | Provenance without disclosure | Having to publish the input to prove the provenance | GDPR Art. 5(1)(c) | manifest carries digests only | `test_manifest_carries_no_payload` |
 | T4 | Human-readable disclosure | A marking only a machine can read | AI Act Art. 50 | `disclosure_text` from the card | `test_marking_binds_the_output` |
