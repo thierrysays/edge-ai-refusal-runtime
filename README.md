@@ -203,20 +203,21 @@ docs/              architecture, control map, ADRs, build log
 
 ## Documentation
 
-- [**Changelog**](CHANGELOG.md), what each release contains, and what it does not
-- [**Getting started**](docs/GETTING_STARTED.md), from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
-- [Architecture](docs/ARCHITECTURE.md), the five controls and why they are ordered as they are
-- [Functional specification](docs/FUNCTIONAL_SPEC.md), actors, requirements, and what counts as the build being good
-- [Technical reference](docs/TECHNICAL_REFERENCE.md), module by module, with the shape of every artefact
-- [Threat model](docs/THREAT_MODEL.md), what is defended, and the residual risk that is accepted rather than overlooked
-- [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md), an external review at v0.1.0, with what it found
-- [Standard of work](docs/STANDARD_OF_WORK.md), what "done" means here, and where this repository falls short of it
-- [Control map](docs/CONTROL_MAP.md), each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
-- [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)), what was built, in what order, and what was wrong on the way
-- [Architecture decisions](docs/adr/), including the three uncomfortable ones
-- [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md), why the repository was renamed and the schema identifiers were not
-- [Security policy](SECURITY.md), private reporting, and what is out of scope by design
-- [Contributing](CONTRIBUTING.md), every claim needs a test that fails without it
+- [**Changelog**](CHANGELOG.md): what each release contains, and what it does not
+- [**Getting started**](docs/GETTING_STARTED.md): from a machine with nothing installed to a verified refusal, assuming no Python and no terminal experience
+- [Architecture](docs/ARCHITECTURE.md): the five controls and why they are ordered as they are
+- [Functional specification](docs/FUNCTIONAL_SPEC.md): actors, requirements, and what counts as the build being good
+- [Technical reference](docs/TECHNICAL_REFERENCE.md): module by module, with the shape of every artefact
+- [Threat model](docs/THREAT_MODEL.md): what is defended, and the residual risk that is accepted rather than overlooked
+- [Audit, 21 August 2026](docs/AUDIT-2026-08-21.md): an external review at v0.1.0, with what it found
+- [Bare metal](docs/BARE_METAL.md): from an unboxed UNO Q to a relay that drops out when the process dies, written ahead of the bench and labelled as untested
+- [Standard of work](docs/STANDARD_OF_WORK.md): what "done" means here, and where this repository falls short of it
+- [Control map](docs/CONTROL_MAP.md): each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
+- [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)): what was built, in what order, and what was wrong on the way
+- [Architecture decisions](docs/adr/): including the three uncomfortable ones
+- [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md): why the repository was renamed and the schema identifiers were not
+- [Security policy](SECURITY.md): private reporting, and what is out of scope by design
+- [Contributing](CONTRIBUTING.md): every claim needs a test that fails without it
 
 ## Tests
 

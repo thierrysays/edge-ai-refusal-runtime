@@ -8,7 +8,10 @@ is **refusals with evidence**, not features.
 
 ```bash
 pip install -e ".[dev]"
-make test          # 113 tests, ~0.5s
+make test          # 136 test functions across five layers, in order
+make smoke         # 8 test functions, under a second: run this first
+make security      # attacks on the controls, rather than exercises of them
+make pentest       # adversarial suite + evidence fuzzer + SAST
 make demo          # deterministic scenario -> ./run
 make verify        # independent journal verification
 make qa            # lint, strict types, SAST, dependency advisories, coverage gate
@@ -39,6 +42,10 @@ something regressed, do not adjust the scenario to match the new output.
 | `docs/FUNCTIONAL_SPEC.md` | Actors, requirements, acceptance criteria |
 | `docs/THREAT_MODEL.md` | What is defended; residual risk R-1 to R-7 |
 | `tests/test_adversarial.py` | Attacks on the controls, not exercises of them |
+| `tests/test_smoke.py` | Does it start, and does every entry point answer |
+| `tests/test_repository.py` | The control map is a contract, enforced. 136 test functions |
+| `tools/fuzz_evidence.py` | Mutation fuzzer over `verify_journal()` and `validate_card()` |
+| `docs/BARE_METAL.md` | Unboxed UNO Q to a relay that drops out. Untested until the bench says otherwise |
 
 ## Invariants, do not break these without an ADR
 
@@ -80,10 +87,12 @@ seven test layers (smoke, unit, functional, security, QA, quality gate,
 pen-test), a threat model, and a bilingual build log entry. Departures are
 stated in the pull request.
 
-That document also lists where **this** repository currently falls short of it,
-no bare-metal path, test layers not separable, no fuzzer over the journal and
-card parsers, no repository-consistency layer. Closing any of those is welcome
-work; pretending they are closed is not.
+All four gaps that document listed are now closed: `docs/BARE_METAL.md` is the
+bare-metal path, `make smoke|unit|functional|security|docs` are the separable
+layers, `tools/fuzz_evidence.py` fuzzes the journal and card parsers, and
+`tests/test_repository.py` fails the build when the control map cites a test
+that does not exist. What remains open is stated in that document, and the list
+is short: nothing has run on hardware.
 
 ## Conventions
 

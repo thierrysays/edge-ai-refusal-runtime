@@ -151,7 +151,7 @@ def validate_card(card: Any) -> dict[str, Any]:
     for field in ("valid_from", "valid_until"):
         try:
             parse_iso(card[field])
-        except ValueError as exc:
+        except (TypeError, ValueError) as exc:
             raise ConfigurationError(f"{field}: {exc}") from exc
     _require(
         parse_iso(card["valid_from"]) < parse_iso(card["valid_until"]),

@@ -7,6 +7,85 @@ fraîches.
 
 ---
 
+## 21 août 2026, plus tard le même jour
+
+### La norme, et quatre manques comblés
+
+`docs/STANDARD_OF_WORK.md` énonce ce que « terminé » signifie dans ces dépôts :
+documentation fonctionnelle et technique, parcours pour néophyte, parcours bare
+metal, harnais de test à sept couches, modèle de menaces, et une entrée de
+journal bilingue. Ce document nommait aussi quatre endroits où ce dépôt restait
+en deçà de sa propre norme. Les quatre sont comblés, et les combler a produit
+deux constats qui ne figuraient au plan de personne.
+
+### Le fuzzer a trouvé une fiche qui faisait tomber la porte
+
+`tools/fuzz_evidence.py` mute des enregistrements de journal et des fiches de
+modèle, et vérifie une seule propriété : `verify_journal()` et `validate_card()`
+répondent par un résultat ou par une erreur de gouvernance nommée, quoi qu'on
+leur donne.
+
+Dès la première exécution, à la graine 12, une fiche portant
+`"valid_from": null` a levé `AttributeError: 'NoneType' object has no attribute
+'replace'` depuis `parse_iso()`. Tout l'argument de la porte d'admission tient à
+ceci : un refus arrive avec un motif sur lequel un opérateur peut agir. Une
+trace d'exécution n'est pas un motif. Un opérateur incapable de savoir pourquoi
+un modèle a été refusé finira par désactiver la porte, ce qui fait de ce défaut
+un défaut de gouvernance déguisé en erreur de type.
+
+Corrigé dans la fonction partagée plutôt qu'au point d'appel : `parse_iso()`
+accepte désormais `object`, déclare dans sa docstring qu'elle se tient sur une
+frontière de confiance, et refuse une valeur non textuelle en nommant le type
+reçu. Six tests négatifs paramétrés la verrouillent, et le fuzzer tourne propre
+sur cinq graines à 3 000 itérations chacune.
+
+Un échec antérieur venait du fuzzer lui-même et mérite d'être consigné : il
+distribuait deux fois le même dictionnaire imbriqué, ce qui produisait une fiche
+auto-référente et une erreur de « référence circulaire » qui ne disait rien du
+code testé. Les valeurs de mutation sont maintenant copiées en profondeur. Un
+constat qui se révèle porter sur le harnais vaut tout de même l'heure passée :
+l'alternative consiste à faire confiance à un harnais qui ment.
+
+### La carte des contrôles n'était pas encore un contrat
+
+`tests/test_repository.py` fait respecter ce que CONTRIBUTING.md affirme depuis
+le premier jour : ajouter un contrôle ajoute une ligne et son test, supprimer un
+test supprime la ligne. La construction échoue quand la carte nomme un test qui
+n'existe pas, quand un lien ou une référence d'ADR ne pointe sur rien, quand un
+`energy_model` perd son étiquette `estimate`, ou quand le nombre de tests
+documenté cesse de correspondre à la suite.
+
+Le contrôle a trouvé de la dérive dès sa première exécution, dans les deux sens.
+Le nombre documenté annonçait 113 alors que la suite comptait 119 fonctions de
+test. Et toute la suite adverse, dix-neuf attaques dont celle qui consigne une
+limite plutôt qu'une défense, n'était nommée nulle part dans la carte. Celle-ci
+comporte désormais une section Adversarial avec ces dix-neuf lignes, plus une
+vingtième pour le constat du fuzzer.
+
+Un contrat que rien ne vérifie est une préférence. Ce fut le cas ici pendant une
+journée.
+
+### Des couches, et un guide écrit avant l'établi
+
+La suite s'exécute désormais en `smoke`, `unit`, `functional`, `security` et
+`docs`, chacune isolément, les rapides d'abord. L'intégration continue exécute
+la couche sécurité et le fuzzer dans un travail distinct, afin qu'une régression
+de sécurité soit lisible dans la liste des vérifications.
+
+`docs/BARE_METAL.md` conduit une UNO Q sortie de son carton jusqu'à un processus
+tué et un relais censé retomber. Le guide est écrit avant l'établi, l'annonce
+dès l'en-tête, et nomme ce qui démentirait chaque étape. Celle qui compte est
+l'étape 6 : tuer le processus par `SIGKILL` et observer si la lampe s'éteint. Si
+elle reste allumée, le correctif ne se trouve pas dans Python, et le guide dit
+où il se trouve.
+
+### État
+
+- 136 fonctions de test réparties en cinq couches, toutes au vert
+- Fuzzer de preuves propre sur cinq graines
+- Un défaut réel trouvé et corrigé, une dérive documentaire redressée
+- Toujours rien exécuté sur matériel
+
 ## 21 août 2026, Jour 1
 
 ### Point de départ

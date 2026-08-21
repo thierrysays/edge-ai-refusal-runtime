@@ -6,6 +6,76 @@ choices are only legible while the reasons are still fresh.
 
 ---
 
+## 2026-08-21, later the same day
+
+### The standard, and four gaps closed
+
+`docs/STANDARD_OF_WORK.md` states what "done" means across these repositories:
+functional and technical documentation, a neophyte path, a bare-metal path, a
+seven-layer test harness, a threat model, and a bilingual build log entry. It
+also named four places where this repository fell short of it. All four are now
+closed, and closing them produced two findings that were not in anyone's plan.
+
+### The fuzzer found a card that crashed the gate
+
+`tools/fuzz_evidence.py` mutates journal records and model cards, and asserts
+one property: `verify_journal()` and `validate_card()` answer with a result or
+a named governance error, whatever they are handed.
+
+On the first run, at seed 12, a card carrying `"valid_from": null` raised
+`AttributeError: 'NoneType' object has no attribute 'replace'` from inside
+`parse_iso()`. The admission gate's whole argument is that a refusal arrives
+with a reason an operator can act on. A stack trace is not that. An operator who
+cannot tell why a model was refused will disable the gate, which makes this a
+governance defect wearing the clothes of a type error.
+
+Fixed at the shared helper rather than at the call site: `parse_iso()` now takes
+`object`, states in its docstring that it sits on a trust boundary, and refuses
+a non-string with a reason naming the type it got. The gate catches `TypeError`
+alongside `ValueError` on the way past. Six parametrised negative tests pin it,
+and the fuzzer runs clean across five seeds at 3 000 iterations each.
+
+One earlier failure was the fuzzer's own fault and worth recording: it handed
+the same nested dictionary out twice, which produced a self-referential card and
+a "circular reference" error that said nothing about this codebase. Fuzz values
+are deep-copied now. A finding that turns out to be about the harness is still
+worth the hour, because the alternative is trusting a harness that lies.
+
+### The control map was not a contract yet
+
+`tests/test_repository.py` enforces what CONTRIBUTING.md has claimed since day
+one: adding a control adds a row plus its test, and deleting a test deletes the
+row. It fails the build when the map names a test that does not exist, when a
+link or an ADR citation points at nothing, when an `energy_model` loses its
+`estimate` label, or when the documented test count stops matching the suite.
+
+It found drift on its first run, in both directions. The documented count said
+113 when the suite held 119 test functions. And the entire adversarial suite,
+nineteen attacks including the one that records a limitation rather than a
+defence, was named nowhere in the map. The map now has an Adversarial section
+with those nineteen rows plus the twentieth for the fuzzer's finding.
+
+A contract nothing checks is a preference. That was true here for a day.
+
+### Layers, and a guide written ahead of the bench
+
+The suite now runs as `smoke`, `unit`, `functional`, `security` and `docs`,
+each alone, fast first. CI runs the security layer and the fuzzer as their own
+job so a regression there is legible in the checks list.
+
+`docs/BARE_METAL.md` takes an unboxed UNO Q to a killed process and a relay that
+should drop out. It is written ahead of the bench, says so at the top, and names
+what would falsify each step. The step that matters is step 6: kill the process
+with `SIGKILL` and watch whether the lamp goes out. If it stays lit, the fix is
+not in Python, and the guide says where it is instead.
+
+### State
+
+- 136 test functions across five layers, all passing
+- Evidence fuzzer clean across five seeds
+- One real defect found and fixed, one piece of documentation drift corrected
+- Still nothing run on hardware
+
 ## 2026-08-21, Day 1
 
 ### Starting position

@@ -22,9 +22,9 @@ JSON with sorted keys, `(",", ":")` separators, `ensure_ascii=False`, and
 |---|---|---|
 | `canonical_bytes(payload)` | `bytes` | NaN, ±Infinity, a digest over a value that does not round-trip is not a digest |
 | `digest(payload)` | `"sha256:<64 hex>"` | as above |
-| `digest_bytes(raw)` | `"sha256:<64 hex>"` |, |
+| `digest_bytes(raw)` | `"sha256:<64 hex>"` |  |
 | `digest_file(path, chunk_size=1MiB)` | `"sha256:<64 hex>"` |, streams, so a model artefact never has to fit in memory |
-| `is_digest(value)` | `bool` |, |
+| `is_digest(value)` | `bool` |  |
 
 Key order does not affect the digest; Unicode is **not** normalised, so two
 distinct code-point sequences that render identically produce different digests.

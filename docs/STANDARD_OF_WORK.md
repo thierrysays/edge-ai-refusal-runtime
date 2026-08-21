@@ -61,32 +61,51 @@ is missing is the layer beneath it, nothing fuzzes the journal parser, the
 canonical serialiser, or the model-card schema, and all three read attacker-
 influenced input.
 
-## Where this repository currently falls short
+## Where this repository stands against it
 
-Stated plainly, because a standard that is announced and not measured against is
-a preference:
+The four gaps this document listed when it was written are closed:
 
-**No bare-metal path.** Nothing has run on hardware, so no guide takes an
-unboxed UNO Q to a verified refusal. `hal/devices.py::UnoQDevice.porting_note`
-carries the intent in three sentences; that is a note, not a guide. This closes
-when the stop channel is ported.
+**A bare-metal path.** `docs/BARE_METAL.md` takes an unboxed UNO Q to a relay
+that drops out when the process is killed, including the wiring polarity that
+makes the de-energised state the stopped state. Every step of it is untested,
+which the guide states at the top rather than leaving the reader to discover at
+step six, and each step names what would prove it wrong.
 
-**The test layers are not separable.** `make test` runs 113 tests as one suite.
-The files are already organised by subject rather than by layer, so a security
-regression and a typo in a policy fixture fail the same way. Splitting the
-Makefile into `smoke`, `unit`, `functional`, `security` and `docs` targets is
-mechanical and has not been done.
+**Separable layers.** `make smoke`, `make unit`, `make functional`,
+`make security` and `make docs` each answer one question and run alone. CI runs
+the security layer and the fuzzer as their own job, so a security regression is
+legible in the checks list rather than buried in a test count.
 
-**No fuzzer.** `verify_journal()` parses a file an auditor may have received
-from anywhere, and the schema validator parses model cards submitted by
-providers. Both deserve a deterministic mutation fuzzer asserting that every
-input produces either a valid structure or a named governance error, never a
-traceback, and never a silently accepted malformed record.
+**A fuzzer.** `tools/fuzz_evidence.py` mutates journals and model cards and
+asserts one property: `verify_journal()` and `validate_card()` answer with a
+result or a named governance error, for any input at all. It found a real
+defect on its first run, in which a card carrying `"valid_from": null` raised
+`AttributeError` out of `parse_iso()`. In the gate that meant a stack trace
+where an operator needed a reason, and an operator who cannot tell why a model
+was refused eventually disables the gate.
 
-**No repository-consistency layer.** Nothing fails the build when a link in the
-control map points at a renamed document, or when an ADR is referenced that does
-not exist. `edge-ai-workbench` has this as `tests/test_repository.py`; the same
-tests would transfer with the paths changed.
+**A repository-consistency layer.** `tests/test_repository.py` fails the build
+when the control map names a test that does not exist, when a markdown link or
+an ADR citation points at nothing, when an `energy_model` loses its `estimate`
+label, or when a documented test count stops matching the suite. Writing it
+surfaced two pieces of drift immediately: the documented count said 113 when the
+suite held 119 test functions, and the entire adversarial suite, nineteen
+attacks, was named nowhere in the control map that CONTRIBUTING.md calls a
+contract. Both are fixed.
+
+## What is still open
+
+**Nothing has run on hardware.** That is the only gap that matters now, and no
+amount of documentation closes it. The stop channel is an argument until a
+killed process is observed leaving a relay de-energised.
+
+**No bench acceptance layer.** There is no test that compares a control's
+behaviour against an instrument reading the physical world, because there is no
+instrument in the loop yet. The sibling repository `edge-ai-workbench` is where
+that measurement will be recorded.
+
+**The CLI argument surface is not fuzzed.** The evidence parsers are. Argument
+fuzzing would be cheap to add and has not been.
 
 ## What this standard does not require
 

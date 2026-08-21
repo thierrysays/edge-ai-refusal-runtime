@@ -7,6 +7,45 @@ Notable changes to this project. Format follows
 This file, not a git tag, is the authoritative record of what each release
 contains. A tag is a pointer; this is the statement.
 
+## [Unreleased]
+
+### Added
+
+- **Standard of work** (`docs/STANDARD_OF_WORK.md`): what "done" means across
+  these repositories, and an honest account of where this one stands against it.
+- **Bare-metal guide** (`docs/BARE_METAL.md`): unboxed UNO Q to a killed process
+  and a relay that should drop out. Written ahead of the bench, labelled
+  untested, with a falsifier named for each step.
+- **Evidence fuzzer** (`tools/fuzz_evidence.py`): deterministic mutation fuzzer
+  over `verify_journal()` and `validate_card()`, asserting that both answer with
+  a result or a named governance error for any input.
+- **Smoke layer** (`tests/test_smoke.py`): every entry point answers, and the
+  module runs as a script.
+- **Repository-consistency layer** (`tests/test_repository.py`): the control map
+  is now enforced as the contract CONTRIBUTING.md always called it. Links, ADR
+  citations, the `estimate` label on every `energy_model`, and the documented
+  test count are all checked.
+- **Adversarial section in the control map**: the nineteen attacks in
+  `tests/test_adversarial.py` were named nowhere in it, including the one that
+  records a known limitation rather than a defence.
+- **Separable test layers**: `make smoke|unit|functional|security|docs`, with
+  security and the fuzzer as their own CI job.
+
+### Fixed
+
+- **A malformed model card crashed the admission gate.** A card carrying
+  `"valid_from": null` raised `AttributeError` out of `parse_iso()` instead of a
+  stated refusal, which in the gate meant a stack trace where an operator needed
+  a reason. Found by the fuzzer on its first run. `parse_iso()` now type-checks
+  before parsing and names the type it was given.
+- **Documented test count**: said 113, suite held 119. Now checked by a test.
+
+### Changed
+
+- Em-dashes are gone from the prose, the docstrings and the comments, replaced
+  by the punctuation each sentence wanted. The signed artefacts under
+  `examples/` are untouched, since their bytes are covered by digests.
+
 ## [0.1.0], 2026-08-21
 
 First public release. Commit `b3922c5`.
