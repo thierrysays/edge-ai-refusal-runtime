@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "governed-edge-ai"
+version = "0.1.0"
+description = "Governance controls for edge AI that either fire, or do not."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Thierry Sayegh-Sauvage" }]
+keywords = ["ai-governance", "edge-ai", "eu-ai-act", "iso-42001", "arduino"]
+
+# One runtime dependency, on purpose. Every transitive dependency is a line in
+# the SBOM you will defend under the Cyber Resilience Act; dependency weight is
+# a governance property, not only an engineering one.
+dependencies = ["cryptography>=41"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+gea = "governed_edge_ai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"

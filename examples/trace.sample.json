@@ -1,0 +1,307 @@
+{
+  "trace": [
+    {
+      "step": "admission",
+      "admitted": true,
+      "obligations": [
+        "human_confirmation",
+        "inference_journal",
+        "output_marking",
+        "policy_mediation",
+        "stop_channel"
+      ],
+      "signers": [
+        "model-owner-01 (model_owner)",
+        "risk-officer-01 (risk_officer)"
+      ]
+    },
+    {
+      "step": "start_attempt_before_release",
+      "performed": false,
+      "effect": "deny",
+      "reasons": [
+        "stop channel engaged: stopped"
+      ]
+    },
+    {
+      "step": "operator_releases_stop",
+      "event": "stop_released",
+      "operator_id": "operator-01",
+      "at": "2026-08-21T09:00:00.000Z",
+      "status": {
+        "channel": "composite",
+        "engaged": false,
+        "engaged_channels": [],
+        "members": [
+          {
+            "channel": "software",
+            "engaged": false,
+            "reason": "",
+            "released_by": "operator-01"
+          },
+          {
+            "channel": "hardware",
+            "engaged": false,
+            "reason": "",
+            "relay_energised": true
+          }
+        ]
+      }
+    },
+    {
+      "step": "set_speed_within_envelope",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-safe-speed: Belt speeds up to 0.4 m/s keep the inspection window within the camera's motion tolerance."
+      ]
+    },
+    {
+      "step": "set_speed_outside_envelope",
+      "performed": false,
+      "effect": "deny",
+      "reasons": [
+        "deny-excessive-speed: Above 0.4 m/s the model has no validated accuracy: this is outside the operating envelope declared in the model card."
+      ]
+    },
+    {
+      "step": "action_on_foreign_target",
+      "performed": false,
+      "effect": "deny",
+      "reasons": [
+        "deny-foreign-targets: This runtime is authorised for the inspection cell only; any other target is out of scope."
+      ]
+    },
+    {
+      "step": "action_without_rationale",
+      "performed": false,
+      "effect": "deny",
+      "reasons": [
+        "deny-unexplained-requests: An action with no stated rationale cannot be reviewed after the fact, so it may not be taken."
+      ]
+    },
+    {
+      "step": "inference",
+      "part": "P0001",
+      "defect": false,
+      "confidence": 0.95,
+      "lux": 450,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "inference",
+      "part": "P0002",
+      "defect": true,
+      "confidence": 0.55,
+      "lux": 180,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "divert_P0002",
+      "performed": true,
+      "effect": "require_human",
+      "reasons": [
+        "escalate-low-confidence-diversion: Below 0.8 confidence the model is outside its declared lighting envelope; a human decides."
+      ]
+    },
+    {
+      "step": "inference",
+      "part": "P0003",
+      "defect": false,
+      "confidence": 0.95,
+      "lux": 500,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "inference",
+      "part": "P0004",
+      "defect": true,
+      "confidence": 0.95,
+      "lux": 500,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "divert_P0004",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-confident-diversion: A confident defect call may divert a part without asking: the cost of a wrong diversion is one scrapped part."
+      ]
+    },
+    {
+      "step": "inference",
+      "part": "P0005",
+      "defect": false,
+      "confidence": 0.95,
+      "lux": 320,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "inference",
+      "part": "P0006",
+      "defect": false,
+      "confidence": 0.95,
+      "lux": 320,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "inference",
+      "part": "P0007",
+      "defect": false,
+      "confidence": 0.95,
+      "lux": 450,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "inference",
+      "part": "P0008",
+      "defect": true,
+      "confidence": 0.95,
+      "lux": 320,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "divert_P0008",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-confident-diversion: A confident defect call may divert a part without asking: the cost of a wrong diversion is one scrapped part."
+      ]
+    },
+    {
+      "step": "inference",
+      "part": "P0009",
+      "defect": true,
+      "confidence": 0.95,
+      "lux": 320,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "divert_P0009",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-confident-diversion: A confident defect call may divert a part without asking: the cost of a wrong diversion is one scrapped part."
+      ]
+    },
+    {
+      "step": "inference",
+      "part": "P0010",
+      "defect": true,
+      "confidence": 0.95,
+      "lux": 450,
+      "marking_verified": true,
+      "marking_reason": "manifest matches the output"
+    },
+    {
+      "step": "divert_P0010",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-confident-diversion: A confident defect call may divert a part without asking: the cost of a wrong diversion is one scrapped part."
+      ]
+    },
+    {
+      "step": "stop_on_defect_run",
+      "performed": true,
+      "effect": "allow",
+      "reasons": [
+        "allow-stop-always: Stopping is always permitted, from any state, by any requester. Asymmetry with resume is deliberate."
+      ]
+    }
+  ],
+  "report": {
+    "model": {
+      "model_id": "weld-defect-detector",
+      "version": "1.4.0",
+      "card_digest": "sha256:db1b5cf0d516bdfac950bf96a1e573798ac97c44072167aeeb327186f8ef31b7",
+      "obligations": [
+        "human_confirmation",
+        "inference_journal",
+        "output_marking",
+        "policy_mediation",
+        "stop_channel"
+      ]
+    },
+    "counters": {
+      "inferences": 10,
+      "requests": 11,
+      "allowed": 7,
+      "denied": 4,
+      "escalated": 1,
+      "escalations_approved": 1,
+      "stops": 0
+    },
+    "budgets": {
+      "limits": {
+        "actions": 40.0,
+        "energy_j": 60.0
+      },
+      "spent": {
+        "actions": 7.0,
+        "energy_j": 10.7
+      },
+      "remaining": {
+        "actions": 33.0,
+        "energy_j": 49.3
+      },
+      "window_seconds": null,
+      "window_start": "2026-08-21T09:00:00.000Z",
+      "renewals": 0
+    },
+    "device_state": {
+      "device_class": "sim",
+      "relay_energised": false,
+      "relay_switches": 2,
+      "conveyor_running": false,
+      "speed": 0.0,
+      "processed": 10,
+      "diverted": [
+        "P0002",
+        "P0004",
+        "P0008",
+        "P0009",
+        "P0010"
+      ],
+      "stops": [
+        "three consecutive defects — upstream fault"
+      ],
+      "energy_spent_j": 10.7
+    },
+    "stop_channel": {
+      "channel": "composite",
+      "engaged": true,
+      "engaged_channels": [
+        "hardware"
+      ],
+      "members": [
+        {
+          "channel": "software",
+          "engaged": false,
+          "reason": "",
+          "released_by": "operator-01"
+        },
+        {
+          "channel": "hardware",
+          "engaged": true,
+          "reason": "",
+          "relay_energised": false
+        }
+      ]
+    },
+    "journal": {
+      "path": "examples/run/journal.jsonl",
+      "entries": 32,
+      "head": "sha256:f443d31e495acb43b27f25012212cd0d23e8442d9abab1b373b04f3613a2ad56"
+    }
+  }
+}

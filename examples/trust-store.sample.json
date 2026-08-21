@@ -1,0 +1,32 @@
+{
+  "schema": "governed-edge-ai/trust-store/v1",
+  "keys": [
+    {
+      "key_id": "model-owner-01",
+      "role": "model_owner",
+      "alg": "ed25519",
+      "public_key": "jdiV6q6BrIqHk0Rh4FoV3T43IABTHSL9YvdIUZIVwR8=",
+      "valid_from": "2026-01-01T00:00:00.000Z",
+      "valid_until": "2027-12-31T00:00:00.000Z",
+      "revoked_at": null
+    },
+    {
+      "key_id": "risk-officer-01",
+      "role": "risk_officer",
+      "alg": "ed25519",
+      "public_key": "rKIXqJYKEYHLTJd3MLmZBCOu9HER4rvILWfF0Ji9gPA=",
+      "valid_from": "2026-01-01T00:00:00.000Z",
+      "valid_until": "2027-12-31T00:00:00.000Z",
+      "revoked_at": null
+    },
+    {
+      "key_id": "device-sim-01",
+      "role": "operator",
+      "alg": "ed25519",
+      "public_key": "EjillhLTK3CREwTEkVagsVJBsKLWNKLoyCpmvD36G60=",
+      "valid_from": "2026-01-01T00:00:00.000Z",
+      "valid_until": "2027-12-31T00:00:00.000Z",
+      "revoked_at": null
+    }
+  ]
+}

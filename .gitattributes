@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.bin binary
+# Evidence files are compared byte-for-byte; never let a checkout rewrite them.
+*.jsonl -text
+examples/** linguist-documentation
+docs/** linguist-documentation

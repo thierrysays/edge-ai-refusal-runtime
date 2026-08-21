@@ -1,0 +1,57 @@
+{
+  "schema": "governed-edge-ai/policy/v1",
+  "name": "weld-inspection-cell",
+  "version": "1.2.0",
+  "rules": [
+    {
+      "id": "allow-safe-speed",
+      "effect": "allow",
+      "when": { "action": "set_speed", "target": "cell", "params.speed": { "lte": 0.4 } },
+      "because": "Belt speeds up to 0.4 m/s keep the inspection window within the camera's motion tolerance."
+    },
+    {
+      "id": "deny-excessive-speed",
+      "effect": "deny",
+      "when": { "action": "set_speed", "params.speed": { "gt": 0.4 } },
+      "because": "Above 0.4 m/s the model has no validated accuracy: this is outside the operating envelope declared in the model card."
+    },
+    {
+      "id": "allow-confident-diversion",
+      "effect": "allow",
+      "when": { "action": "divert_part", "target": "cell", "params.confidence": { "gte": 0.8 } },
+      "because": "A confident defect call may divert a part without asking: the cost of a wrong diversion is one scrapped part."
+    },
+    {
+      "id": "escalate-low-confidence-diversion",
+      "effect": "require_human",
+      "when": { "action": "divert_part", "params.confidence": { "lt": 0.8 } },
+      "because": "Below 0.8 confidence the model is outside its declared lighting envelope; a human decides.",
+      "obligations": ["record_operator_identity"]
+    },
+    {
+      "id": "allow-stop-always",
+      "effect": "allow",
+      "when": { "action": "stop_conveyor" },
+      "because": "Stopping is always permitted, from any state, by any requester. Asymmetry with resume is deliberate."
+    },
+    {
+      "id": "escalate-resume",
+      "effect": "require_human",
+      "when": { "action": "resume_conveyor" },
+      "because": "Restarting a line that stopped itself requires a named human: the machine may not clear its own fault.",
+      "obligations": ["record_operator_identity"]
+    },
+    {
+      "id": "deny-foreign-targets",
+      "effect": "deny",
+      "when": { "target": { "not_in": ["cell"] } },
+      "because": "This runtime is authorised for the inspection cell only; any other target is out of scope."
+    },
+    {
+      "id": "deny-unexplained-requests",
+      "effect": "deny",
+      "when": { "rationale": { "matches": "\\s*" } },
+      "because": "An action with no stated rationale cannot be reviewed after the fact, so it may not be taken."
+    }
+  ]
+}
