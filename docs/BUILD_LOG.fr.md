@@ -234,10 +234,17 @@ Rien dans `src/`. L'invariant 10 tient inchangé — chaque `energy_model` reste
 format nommé, et `energy_model_source` portera la chaîne `source` du banc
 verbatim, empreinte comprise.
 
-### Stockage temporaire
+### Où ils sont allés
 
-Les deux arborescences sont complètes et se trouvent sous `spinoff/` sur cette
-branche, parce que l'application GitHub qui porte la session ne peut pas créer de
-dépôts (`403 Resource not accessible by integration`). `spinoff/README.md` porte
-les commandes de transplantation. Rien de ce qui s'y trouve n'est importé,
-empaqueté, ni atteint par `make qa`.
+Les deux sont leurs propres dépôts, poussés le même jour :
+
+* <https://github.com/thierrysays/measurement-harness>
+* <https://github.com/thierrysays/fleet-ops-lab>
+
+Ils ont été construits dans un répertoire de travail ici et entreposés
+brièvement sous `spinoff/`, parce que l'application GitHub qui porte la session
+ne peut pas créer de dépôts (`403 Resource not accessible by integration`). Dès
+que les deux dépôts distants ont existé, les arborescences ont été transplantées
+et le répertoire supprimé : il ne reste donc rien de ces deux projets dans
+celui-ci — ce qui est tout l'objet de l'ADR 0011, et que les laisser ici aurait
+discrètement défait.

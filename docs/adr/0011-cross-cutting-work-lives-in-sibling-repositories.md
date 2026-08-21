@@ -23,10 +23,12 @@ Both are useful to this repository. Neither belongs in it.
 
 Both become separate, hardware-agnostic repositories:
 
-* `fleet-ops-lab` — A/B slots with automatic rollback, digest-bound manifests,
-  SBOM diffing, reproducible-build checking, waved rollouts with a halt rule.
-* `measurement-harness` — instrument-agnostic power, latency and thermal
-  measurement, emitting verifiable reports.
+* [`fleet-ops-lab`](https://github.com/thierrysays/fleet-ops-lab) — A/B slots
+  with automatic rollback, digest-bound manifests, SBOM diffing,
+  reproducible-build checking, waved rollouts with a halt rule.
+* [`measurement-harness`](https://github.com/thierrysays/measurement-harness) —
+  instrument-agnostic power, latency and thermal measurement, emitting
+  verifiable reports.
 
 Neither depends on this package, and this package does not depend on either. The
 only interface is a file: a `measurement-harness/energy-model/v1` export can

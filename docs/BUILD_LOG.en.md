@@ -219,9 +219,16 @@ labelled `estimate` — but the replacement now has a named producer and a named
 format, and `energy_model_source` will carry the harness's `source` string
 verbatim, digest and all.
 
-### Staging
+### Where they went
 
-Both trees are complete and sit under `spinoff/` on this branch, because the
-GitHub App backing the session cannot create repositories (`403 Resource not
-accessible by integration`). `spinoff/README.md` carries the transplant
-commands. Nothing there is imported, packaged, or reached by `make qa`.
+Both are their own repositories, pushed the same day:
+
+* <https://github.com/thierrysays/measurement-harness>
+* <https://github.com/thierrysays/fleet-ops-lab>
+
+They were built in a working directory here and staged briefly under
+`spinoff/`, because the GitHub App backing the session cannot create
+repositories (`403 Resource not accessible by integration`). Once the two
+remotes existed the trees were transplanted and the directory removed, so
+nothing of either project remains in this one — which is the whole point of
+ADR 0011, and would have been quietly undone by leaving them here.
