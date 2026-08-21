@@ -1,4 +1,4 @@
-# governed-edge-ai
+# edge-ai-refusal-runtime
 
 **Governance controls for edge AI that either fire, or do not.**
 
@@ -137,6 +137,41 @@ suite pins that behaviour.
 - **Not a compliance certificate.** Nothing here certifies anything. It
   demonstrates that specific controls can be made to fire, and shows the cost.
 
+## The name, and the other two repositories
+
+This repository is one of three, and the name needs a word of explanation.
+
+`governed-edge-ai` is the **Arduino rig**: five boards, one job each, where
+log-before-act, witness-before-act and human override are enforced in protocol
+and in circuitry rather than in a policy document. It is at `v3.0.0` and it has
+a bistable relay in a motor supply. This repository is the **software runtime**
+for the same argument and the same five boards, written simulation-first so the
+controls could be built and deliberately broken before any board arrived. The
+two share an author, a licence, a regulatory frame and a target inventory. They
+share no code and no history, which is why they are two repositories rather than
+one.
+
+`cra-in-a-box` is the third: the Cyber Resilience Act chain end to end — SBOM,
+VEX, scan, Article 14 reporting, signed update, Annex VII pack. It is the
+repository the CRA row in the table above defers to.
+
+The three duplicate `canonical.py` and `clock.py` rather than share them, on
+purpose. Under the CRA a shared internal package is a component to list, monitor
+and remediate for at least five years, and in repositories arguing about the
+cost of dependencies, taking one to save 150 lines would be an argument against
+the thesis.
+
+Two names in this repository do **not** match its slug. The import package is
+`governed_edge_ai`, the console script is `gea`, and every artefact is stamped
+`governed-edge-ai/journal-record/v1` or a sibling identifier. Those identifiers
+are frozen: `journal-record/v1` sits inside every hashed record and `tbs/v1`
+inside every signed payload, so changing the string would invalidate every
+signature made before the change. A journal retained for five years has to stay
+verifiable by someone holding the file and not the repository — across renames,
+forks, and the disappearance of whoever published it. An identifier that tracks
+a repository name is one that breaks when the repository is renamed.
+→ [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md)
+
 ## Layout
 
 ```
@@ -161,6 +196,7 @@ docs/              architecture, control map, ADRs, build log
 - [Control map](docs/CONTROL_MAP.md) — each control → AI Act / ISO 42001 / NIST AI RMF, and the test that proves it
 - [Build log](docs/BUILD_LOG.en.md) ([français](docs/BUILD_LOG.fr.md)) — what was built, in what order, and what was wrong on the way
 - [Architecture decisions](docs/adr/) — including the three uncomfortable ones
+- [ADR 0010](docs/adr/0010-repository-name-and-frozen-schema-ids.md) — why the repository was renamed and the schema identifiers were not
 - [Security policy](SECURITY.md) — private reporting, and what is out of scope by design
 - [Contributing](CONTRIBUTING.md) — every claim needs a test that fails without it
 

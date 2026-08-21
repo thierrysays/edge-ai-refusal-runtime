@@ -12,6 +12,15 @@ driven.
 
 Target inventory (August 2026): UNO Q 4 GB, VENTUNO Q, UNO R4 WiFi with the
 Plug and Make Kit Modulino nodes, Alvik, Nesso N1.
+
+A profile states a *capability*, never a job. ``available_controls`` answers
+"could this board enforce this control if asked", which is the only question the
+admission gate has. It does not answer "what is this board for". The sibling
+`governed-edge-ai` repository answers that second question for one particular
+rig, and answers it more strictly: there, the UNO Q is the witness and enforces
+nothing, and no board both decides and enforces. Both statements are true at
+once because they are about different things, and reading a capability set as a
+role assignment is the misreading this paragraph exists to prevent.
 """
 
 from __future__ import annotations

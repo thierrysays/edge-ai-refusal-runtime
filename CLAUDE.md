@@ -1,4 +1,4 @@
-# governed-edge-ai — project instructions
+# edge-ai-refusal-runtime — project instructions
 
 A runtime that refuses to execute an AI model unless its paperwork holds, and
 refuses every actuation that no rule authorises. The product of this repository
@@ -58,6 +58,14 @@ something regressed — do not adjust the scenario to match the new output.
    demonstrated on the bench, and say so in the build log.
 10. **Every `energy_model` is labelled `estimate`** until a real measurement
     replaces it. Do not quietly drop the label.
+11. **The schema identifiers are frozen and do not track the repository name.**
+    The repository is `edge-ai-refusal-runtime`; the import package is
+    `governed_edge_ai`, the console script is `gea`, and every artefact is
+    stamped `governed-edge-ai/journal-record/v1` or a sibling identifier. This
+    is not drift left over from the rename. `journal-record/v1` is inside every
+    hashed record and `tbs/v1` is inside every signed payload, so changing
+    either string invalidates every signature and every chain made before the
+    change. Do not "tidy" them into agreement with the slug. → ADR 0010.
 
 ## Conventions
 
@@ -106,6 +114,13 @@ Deleting a test deletes the row.
   transmission belongs to whoever operates the fleet. → ADR 0007.
 - **`SimulatedModel` is a stand-in**, not a detector. Its two knobs — miss rate
   and false-alarm rate — are the governance events that matter.
+- **The device profiles are capability, not job assignment.** `available_controls`
+  records what a board *can* enforce, which is what the admission gate needs to
+  know. It does not say which job that board holds in a rig. The sibling
+  `governed-edge-ai` repository assigns the UNO Q the witness role and lets no
+  board both decide and enforce; nothing here contradicts that, because nothing
+  here assigns roles at all. Do not "align" the two by narrowing a profile — a
+  profile that understates a device is as wrong as one that overstates it.
 
 ## The next milestone
 

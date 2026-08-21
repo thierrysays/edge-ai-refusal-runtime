@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "governed-edge-ai"
+name = "edge-ai-refusal-runtime"
 version = "0.1.0"
 description = "Governance controls for edge AI that either fire, or do not."
 readme = "README.md"
