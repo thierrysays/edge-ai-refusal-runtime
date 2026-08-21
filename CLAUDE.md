@@ -110,6 +110,21 @@ covered. Two are not, and saying so is cheaper than discovering it:
   separated. Restructuring into `tests/{smoke,unit,functional,security,pentest}/`
   with markers applied from the path is tracked, not done.
 
+## Repository metadata
+
+**Every repository carries `glossolalie-advisory` as a topic.** It is the common
+tag across the whole portfolio — the one that makes the family findable from a
+single search — and it sits alongside the repository's own descriptive topics
+rather than replacing them. A new repository is not finished until it has it.
+
+The rest of the topic list describes *this* repository: what it does, what it
+runs on, what standard it answers to. Aim for ten to twenty, lower-case and
+hyphenated, and prefer terms somebody would actually search for over terms that
+merely sound thorough.
+
+The description is one sentence saying what the thing refuses or measures, not
+what category it belongs to.
+
 ## Conventions
 
 **Tests assert on the world, not the log.** `assert bench.cell.speed == 0.3`,
