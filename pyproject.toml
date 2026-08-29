@@ -55,7 +55,7 @@ ignore = ["E501", "SIM108", "RET504"]
 
 [tool.mypy]
 strict = true
-files = ["src"]
+files = ["src", "scripts"]
 warn_unused_ignores = true
 warn_unreachable = true
 

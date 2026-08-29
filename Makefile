@@ -1,4 +1,4 @@
-.PHONY: lint typecheck security audit qa install test demo verify lint clean
+.PHONY: lint typecheck security audit counts qa install test demo verify clean
 
 install:
 	pip install -e ".[dev]"
@@ -33,7 +33,7 @@ clean:
 # warning nobody reads.
 
 lint:
-	python -m ruff check src tests
+	python -m ruff check src tests scripts
 
 typecheck:
 	python -m mypy
@@ -42,7 +42,12 @@ security:
 	python -m bandit -q -r src
 	python -m pip_audit --progress-spinner off
 
+# A count written next to a command is stale the moment somebody adds a test.
+# This is the only part of the gate that reads the documentation.
+counts:
+	python scripts/check_documented_counts.py
+
 cover:
 	python -m pytest --cov --cov-report=term-missing
 
-qa: lint typecheck security cover
+qa: lint typecheck security counts cover
