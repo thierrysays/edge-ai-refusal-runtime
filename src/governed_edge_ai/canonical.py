@@ -1,7 +1,7 @@
 """Canonical serialisation and digests.
 
-Every governance artefact in this project — model cards, journal records,
-policy decisions, provenance manifests — is hashed. A hash is only as good as
+Every governance artefact in this project: model cards, journal records,
+policy decisions, provenance manifests, is hashed. A hash is only as good as
 the determinism of the bytes that go into it, so all serialisation goes
 through this module and nowhere else.
 

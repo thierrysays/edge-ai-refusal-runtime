@@ -58,7 +58,7 @@ class ActuationRequest:
         """Resolve a dotted attribute path against the request.
 
         Returns ``(found, value)`` so that a rule can distinguish "absent" from
-        "present and null" — a distinction that decides whether a default-deny
+        "present and null", a distinction that decides whether a default-deny
         rule fires.
         """
         if path in ("action", "target", "requester", "model_id", "rationale"):

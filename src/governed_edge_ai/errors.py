@@ -59,6 +59,6 @@ class KillSwitchEngaged(GovernanceError):
 
 
 class ConfigurationError(GovernanceError):
-    """The governance configuration itself is invalid — also a fail-closed case."""
+    """The governance configuration itself is invalid, also a fail-closed case."""
 
     code = "configuration_error"

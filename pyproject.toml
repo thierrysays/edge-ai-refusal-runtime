@@ -43,7 +43,7 @@ target-version = "py310"
 # F and I are errors: an unused import or a shadowed name is a defect in a
 # repository whose subject is knowing exactly what is loaded. B and S are the
 # bug and security rule sets. The path-handling (PTH) and style-modernisation
-# (UP) sets are deliberately NOT enabled — they would churn working code
+# (UP) sets are deliberately NOT enabled, they would churn working code
 # without changing behaviour, and this repository has no spare credibility to
 # spend on a diff nobody asked for.
 select = ["E", "F", "W", "I", "B", "S", "C4", "SIM", "RET"]

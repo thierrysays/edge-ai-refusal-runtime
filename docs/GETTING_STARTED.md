@@ -17,24 +17,24 @@ verify` and skip to [What the demonstration proves](#what-the-demonstration-prov
 
 ## Table of contents
 
-- [Part 0 — What you are about to run, and why](#part-0--what-you-are-about-to-run-and-why)
-- [Part 1 — Open a terminal](#part-1--open-a-terminal)
-- [Part 2 — Install Python](#part-2--install-python)
-- [Part 3 — Get the code](#part-3--get-the-code)
-- [Part 4 — Make a virtual environment](#part-4--make-a-virtual-environment)
-- [Part 5 — Install the project](#part-5--install-the-project)
-- [Part 6 — Run the tests](#part-6--run-the-tests)
-- [Part 7 — Run the demonstration](#part-7--run-the-demonstration)
+- [Part 0, What you are about to run, and why](#part-0--what-you-are-about-to-run-and-why)
+- [Part 1, Open a terminal](#part-1--open-a-terminal)
+- [Part 2, Install Python](#part-2--install-python)
+- [Part 3, Get the code](#part-3--get-the-code)
+- [Part 4, Make a virtual environment](#part-4--make-a-virtual-environment)
+- [Part 5, Install the project](#part-5--install-the-project)
+- [Part 6, Run the tests](#part-6--run-the-tests)
+- [Part 7, Run the demonstration](#part-7--run-the-demonstration)
 - [What the demonstration proves](#what-the-demonstration-proves)
-- [Part 8 — Verify the evidence yourself](#part-8--verify-the-evidence-yourself)
-- [Part 9 — Break it on purpose](#part-9--break-it-on-purpose)
-- [Part 10 — Look inside the evidence](#part-10--look-inside-the-evidence)
-- [Part 11 — Try your own refusal](#part-11--try-your-own-refusal)
+- [Part 8, Verify the evidence yourself](#part-8--verify-the-evidence-yourself)
+- [Part 9, Break it on purpose](#part-9--break-it-on-purpose)
+- [Part 10, Look inside the evidence](#part-10--look-inside-the-evidence)
+- [Part 11, Try your own refusal](#part-11--try-your-own-refusal)
 - [Troubleshooting](#troubleshooting)
 
 ---
 
-## Part 0 — What you are about to run, and why
+## Part 0. What you are about to run, and why
 
 A simulated weld-inspection cell: a conveyor, a camera, a diverter that pushes
 bad parts off the line, and a stop relay.
@@ -57,26 +57,26 @@ arrived.
 
 ---
 
-## Part 1 — Open a terminal
+## Part 1. Open a terminal
 
 A terminal is a window where you type commands instead of clicking.
 
-**Windows** — press the Windows key, type `powershell`, press Enter.
+**Windows**: press the Windows key, type `powershell`, press Enter.
 
-**macOS** — press ⌘ + Space, type `terminal`, press Enter.
+**macOS**: press ⌘ + Space, type `terminal`, press Enter.
 
-**Linux** — press Ctrl + Alt + T, or find "Terminal" in your applications.
+**Linux**: press Ctrl + Alt + T, or find "Terminal" in your applications.
 
 You will see a prompt: some text ending in `>` or `$` or `%`. Commands go after
 it. Type the command, press Enter, wait for the prompt to come back.
 
-Throughout this guide, lines starting with `#` are comments — do not type them.
+Throughout this guide, lines starting with `#` are comments, do not type them.
 
 ---
 
-## Part 2 — Install Python
+## Part 2. Install Python
 
-You need Python **3.10 or newer**. Check first — you may already have it.
+You need Python **3.10 or newer**. Check first, you may already have it.
 
 ```bash
 python3 --version
@@ -92,15 +92,15 @@ If you see `Python 3.10.x` or higher, skip to Part 3.
 
 If you see `command not found`, or a version below 3.10:
 
-**Windows** — download from [python.org/downloads](https://www.python.org/downloads/).
+**Windows**: download from [python.org/downloads](https://www.python.org/downloads/).
 Run the installer. **Tick "Add python.exe to PATH"** on the first screen; it is
 easy to miss and everything afterwards fails without it. Close your terminal and
 open a new one.
 
-**macOS** — download from [python.org/downloads](https://www.python.org/downloads/)
+**macOS**: download from [python.org/downloads](https://www.python.org/downloads/)
 and run the installer. Or, if you have Homebrew: `brew install python@3.12`.
 
-**Linux (Debian/Ubuntu)** —
+**Linux (Debian/Ubuntu)**:
 
 ```bash
 sudo apt update
@@ -111,9 +111,9 @@ Check again before continuing. You must see 3.10 or higher.
 
 ---
 
-## Part 3 — Get the code
+## Part 3. Get the code
 
-**Option A — with git** (better; you can update later with `git pull`):
+**Option A, with git** (better; you can update later with `git pull`):
 
 ```bash
 git clone https://github.com/thierrysays/edge-ai-refusal-runtime
@@ -124,7 +124,7 @@ If `git` is not installed: `sudo apt install git` on Linux,
 `brew install git` on macOS, or [git-scm.com/downloads](https://git-scm.com/downloads)
 on Windows.
 
-**Option B — without git:** open the repository page in a browser, click the
+**Option B, without git:** open the repository page in a browser, click the
 green **Code** button, choose **Download ZIP**, unzip it, then in the terminal
 type `cd ` (with a space) and drag the unzipped folder onto the terminal window.
 Press Enter.
@@ -139,7 +139,7 @@ You should see `README.md`, `pyproject.toml`, `src`, `tests`, `docs`.
 
 ---
 
-## Part 4 — Make a virtual environment
+## Part 4. Make a virtual environment
 
 A virtual environment is a private box for this project's dependencies, so it
 cannot disturb anything else on your machine. It is one folder called `.venv`,
@@ -172,14 +172,14 @@ later says "not found", this is almost always why.
 
 ---
 
-## Part 5 — Install the project
+## Part 5. Install the project
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-This downloads one runtime dependency — `cryptography`, which does the signing —
-plus the test tools. One dependency is deliberate: every dependency is a
+This downloads one runtime dependency, `cryptography`, which does the signing.
+It also installs the test tools. One dependency is deliberate: every dependency is a
 component someone must list in an SBOM and monitor for years, so dependency
 weight is treated here as a governance property rather than only an engineering
 one.
@@ -194,7 +194,7 @@ gea --version
 
 ---
 
-## Part 6 — Run the tests
+## Part 6. Run the tests
 
 ```bash
 python -m pytest
@@ -205,11 +205,11 @@ Expect a row of dots and `... passed`. It takes about half a second.
 Roughly three quarters of these tests assert that something was **refused**. A
 gate that admits a good model proves nothing; a gate that admits a bad one
 manufactures assurance. If any test fails, stop and see
-[Troubleshooting](#troubleshooting) — do not continue.
+[Troubleshooting](#troubleshooting), do not continue.
 
 ---
 
-## Part 7 — Run the demonstration
+## Part 7. Run the demonstration
 
 ```bash
 gea demo --out ./run --parts 16
@@ -241,32 +241,32 @@ You will see something like this:
 
 Read the four refusals, because each is a different kind of control.
 
-**`start_attempt_before_release` — it cannot start itself.** The stop channel
+**`start_attempt_before_release`, it cannot start itself.** The stop channel
 boots *engaged*. The relay is de-energised at power-on, and releasing it takes a
 named human. `""` and `"unattended"` are not names. A system that comes up
 running is a system nobody authorised to be running.
 
-**`set_speed_outside_envelope` — it cannot exceed what its paperwork claims.**
+**`set_speed_outside_envelope`, it cannot exceed what its paperwork claims.**
 The model card declares an operating envelope. Above it, the model has no
-validated accuracy, so the request is refused — by a rule, in a file, that a
+validated accuracy, so the request is refused, by a rule, in a file, that a
 risk officer can read.
 
-**`action_on_foreign_target` — it cannot wander.** Authorised for the inspection
+**`action_on_foreign_target`, it cannot wander.** Authorised for the inspection
 cell, so the paint booth is out of scope, however idle it looks.
 
-**`action_without_rationale` — it cannot act unexplainably.** An action with no
+**`action_without_rationale`, it cannot act unexplainably.** An action with no
 stated reason cannot be reviewed after the fact, so it may not be taken at all.
 
 And the escalation, `divert_P0002`: below the confidence threshold the runtime
 will not decide alone. It asks a named human. **If nobody answers, that is a
-refusal, not a permission** — the default operator refuses, deliberately.
+refusal, not a permission**, the default operator refuses, deliberately.
 
 The counts are fixed. If `refused` is ever not **4**, a control changed
-behaviour — that is a broken build, not a changed demo.
+behaviour, that is a broken build, not a changed demo.
 
 ---
 
-## Part 8 — Verify the evidence yourself
+## Part 8. Verify the evidence yourself
 
 The run wrote a journal. Check it:
 
@@ -285,7 +285,7 @@ trusting it.
 
 ---
 
-## Part 9 — Break it on purpose
+## Part 9. Break it on purpose
 
 This is the most useful two minutes in the guide.
 
@@ -293,8 +293,8 @@ This is the most useful two minutes in the guide.
 make tamper
 ```
 
-It re-runs the demo, edits one journal record — flipping a `deny` into an
-`allow`, the edit somebody would actually want to make — and verifies again:
+It re-runs the demo, edits one journal record (flipping a `deny` into an
+`allow`, the edit somebody would actually want to make) and verifies again:
 
 ```
 journal FAILED at seq 6: record hash does not match its content: the entry was altered
@@ -312,7 +312,7 @@ passes *on purpose* to prove it is still true.
 Try one more:
 
 ```bash
-# On macOS/Linux — empty the journal completely
+# On macOS/Linux, empty the journal completely
 : > ./run/journal.jsonl
 gea verify --journal ./run/journal.jsonl
 ```
@@ -328,7 +328,7 @@ exists to refuse.
 
 ---
 
-## Part 10 — Look inside the evidence
+## Part 10. Look inside the evidence
 
 ```bash
 ls ./run
@@ -348,12 +348,12 @@ gea policy --policy policies/inspection.json    # the rules, as data
 
 The `uno-r4-wifi` row in `gea devices` is the interesting one: it deliberately
 lacks the inference journal, because a microcontroller has no durable
-append-only storage. A high-risk model is therefore *refused* on it — an honest
+append-only storage. A high-risk model is therefore *refused* on it, an honest
 "no" instead of a control that exists on paper only.
 
 ---
 
-## Part 11 — Try your own refusal
+## Part 11. Try your own refusal
 
 Rules are data, not code, so you can change what is permitted without touching
 Python.
@@ -379,7 +379,7 @@ can diff against last month's version.
 
 **`command not found: python3`**
 Windows uses `python`, not `python3`. If it still fails, Python is not on your
-PATH — reinstall and tick "Add python.exe to PATH".
+PATH: reinstall and tick "Add python.exe to PATH".
 
 **`command not found: gea`**
 The virtual environment is not active. Your prompt should start with `(.venv)`.
@@ -390,7 +390,7 @@ Either the environment is not active, or Part 5 did not finish. Re-run
 `pip install -e ".[dev]"` and read the last line.
 
 > The package is `governed_edge_ai` while the repository is
-> `edge-ai-refusal-runtime`. This is not a mistake — the identifiers are frozen
+> `edge-ai-refusal-runtime`. This is not a mistake, the identifiers are frozen
 > so that a journal stays verifiable across a repository rename.
 > → [ADR 0010](adr/0010-repository-name-and-frozen-schema-ids.md)
 

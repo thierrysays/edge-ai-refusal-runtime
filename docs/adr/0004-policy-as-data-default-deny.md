@@ -1,4 +1,4 @@
-# ADR 0004 — Policy as data, default deny
+# ADR 0004, Policy as data, default deny
 
 **Status:** accepted · 2026-08-21
 
@@ -15,7 +15,7 @@ mandatory `because` string of at least eight characters. Effects combine by
 maximum: `deny` > `require_human` > `allow`. No matching rule is a refusal.
 
 Operators are validated eagerly at load time, so a misspelt operator fails when
-the policy is loaded rather than silently producing a rule that never fires —
+the policy is loaded rather than silently producing a rule that never fires,
 the most dangerous failure mode a policy language has.
 
 ## Alternatives rejected

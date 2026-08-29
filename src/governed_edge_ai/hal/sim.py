@@ -37,7 +37,7 @@ SIM_PROFILE = DeviceProfile(
         "resume_conveyor": 1.0,
         "inference": 0.35,
     },
-    energy_model_source="synthetic (simulation only — not measured)",
+    energy_model_source="synthetic (simulation only, not measured)",
 )
 
 

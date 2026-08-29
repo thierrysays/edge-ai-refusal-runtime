@@ -1,4 +1,4 @@
-# ADR 0005 — Simulation first, boards second
+# ADR 0005, Simulation first, boards second
 
 **Status:** accepted · 2026-08-21
 
@@ -17,7 +17,7 @@ raise `NotPortedError` carrying a specific porting note rather than pretending.
 ## Consequences
 
 The profiles turned out to be the most useful artefact. `uno-r4-wifi` cannot
-hold the journal, so a high-risk card is refused on it — a governance
+hold the journal, so a high-risk card is refused on it, a governance
 conclusion that fell out of writing the profile honestly, and that would have
 been papered over had the code been written against the board first.
 

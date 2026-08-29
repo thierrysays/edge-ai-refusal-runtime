@@ -1,4 +1,4 @@
-# ADR 0010 — The repository is renamed; the schema identifiers are not
+# ADR 0010, The repository is renamed; the schema identifiers are not
 
 **Status:** accepted · 2026-08-21
 
@@ -20,8 +20,8 @@ inform.
 The name appears in three places with three different stability requirements,
 and the mistake available here is to treat them as one.
 
-1. The **repository slug and distribution name** — the thing that collided.
-2. The **import package** `governed_edge_ai` and the console script `gea` —
+1. The **repository slug and distribution name**, the thing that collided.
+2. The **import package** `governed_edge_ai` and the console script `gea`,
    which collided with nothing.
 3. The **schema identifiers**: `governed-edge-ai/journal-record/v1`,
    `.../model-card/v1`, `.../policy/v1`, `.../provenance/v1`,
@@ -45,7 +45,7 @@ schema identifier exactly as they are.
 
 A schema identifier names the artefact format, not the repository that happened
 to produce it. A journal retained under the Cyber Resilience Act must remain
-verifiable by someone who has the file and not the repository — for at least
+verifiable by someone who has the file and not the repository, for at least
 five years, across renames, forks and the disappearance of the original
 publisher. An identifier that tracks the repository name is an identifier that
 breaks when the repository is renamed, which is the failure this project exists

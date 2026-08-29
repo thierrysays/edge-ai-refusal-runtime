@@ -5,16 +5,16 @@ and no parameter choices to get wrong on a device that will be deployed by
 someone who is not a cryptographer.
 
 Threat model addressed here:
-  * **Signature transplant** — a valid signature is lifted from card A and
+  * **Signature transplant**: a valid signature is lifted from card A and
     replayed on card B. Prevented by signing a to-be-signed structure that
     binds the card digest to the signer identity and the signing time.
-  * **Role confusion** — a model owner's signature is counted towards the
+  * **Role confusion**: a model owner's signature is counted towards the
     risk officer quorum. Prevented by resolving the role from the trust store
     at verification time, never from the envelope.
-  * **Expired or revoked keys** — checked against the trust store, fail-closed.
+  * **Expired or revoked keys**: checked against the trust store, fail-closed.
 
 Explicitly *not* addressed: key custody. Software keys on a Linux SBC have no
-hardware root of trust. See docs/adr/0006-no-hardware-root-of-trust.md — the
+hardware root of trust. See docs/adr/0006-no-hardware-root-of-trust.md, the
 honest statement of that gap is part of the deliverable.
 """
 

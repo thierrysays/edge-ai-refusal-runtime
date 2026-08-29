@@ -1,4 +1,4 @@
-"""governed-edge-ai — governance controls that either fire, or do not.
+"""governed-edge-ai, governance controls that either fire, or do not.
 
 A small runtime that refuses to execute an AI model unless the model's card is
 signed, current, bound to the artefact on disk, and enforceable by this device;

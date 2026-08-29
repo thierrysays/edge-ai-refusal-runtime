@@ -3,7 +3,7 @@
 The tests that matter here are the *negative* ones. A gate that admits a good
 model proves nothing; a gate that admits a bad one is worse than no gate at all,
 because it manufactures assurance. Each refusal below corresponds to a control
-claimed in docs/CONTROL_MAP.md — if a test is deleted, the claim goes with it.
+claimed in docs/CONTROL_MAP.md, if a test is deleted, the claim goes with it.
 """
 
 from __future__ import annotations
@@ -321,3 +321,38 @@ def test_envelope_without_signatures_is_refused(
 def test_garbage_input_is_refused_not_crashed(trust_store, full_runtime, clock):
     decision = admit({"nonsense": True}, trust_store, full_runtime, clock=clock)
     assert not decision.admitted
+
+
+# ------------------------------------------------------------- malformed input
+# Found by tools/fuzz_evidence.py: a card carrying `"valid_from": null` raised
+# AttributeError out of parse_iso rather than a stated refusal. In the gate that
+# meant a stack trace where an operator needed a reason, and an operator who
+# cannot tell why a model was refused will eventually disable the gate.
+
+@pytest.mark.parametrize("value", [None, 0, True, [], {}, ["2026-01-01T00:00:00Z"]])
+def test_a_non_string_validity_date_is_refused_with_a_reason(high_risk_card, value):
+    from governed_edge_ai.errors import ConfigurationError
+    from governed_edge_ai.registry.schema import validate_card
+
+    card = copy.deepcopy(high_risk_card)
+    card["valid_from"] = value
+    with pytest.raises(ConfigurationError, match="valid_from"):
+        validate_card(card)
+
+
+@pytest.mark.parametrize("value", ["21 August 2026", "2026-13-01T00:00:00Z", "", "Z"])
+def test_a_malformed_validity_date_is_refused_with_a_reason(high_risk_card, value):
+    from governed_edge_ai.errors import ConfigurationError
+    from governed_edge_ai.registry.schema import validate_card
+
+    card = copy.deepcopy(high_risk_card)
+    card["valid_until"] = value
+    with pytest.raises(ConfigurationError, match="valid_until"):
+        validate_card(card)
+
+
+def test_parse_iso_names_the_type_it_was_given():
+    from governed_edge_ai.clock import parse_iso
+
+    with pytest.raises(ValueError, match="got NoneType"):
+        parse_iso(None)

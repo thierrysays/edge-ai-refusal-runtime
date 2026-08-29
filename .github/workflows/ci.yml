@@ -17,7 +17,31 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: python -m pytest -q
+      - name: smoke
+        run: python -m pytest tests/test_smoke.py -q
+      - name: unit
+        run: python -m pytest tests/test_journal.py tests/test_policy.py tests/test_registry_admission.py tests/test_oversight_and_marking.py -q
+      - name: functional
+        run: python -m pytest tests/test_runtime_e2e.py tests/test_cli.py -q
+      - name: documentation
+        run: python -m pytest tests/test_repository.py -q
+
+  security:
+    # Its own job so a security regression is legible in the checks list rather
+    # than buried in a test count.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - name: adversarial suite
+        run: python -m pytest tests/test_adversarial.py -q
+      - name: evidence fuzz
+        run: |
+          python tools/fuzz_evidence.py --iterations 4000 --seed 12
+          python tools/fuzz_evidence.py --iterations 4000 --seed 2026
 
   evidence:
     # The demonstration is part of the build: if the scenario stops refusing
@@ -52,11 +76,11 @@ jobs:
       - run: python -m pip install -U pip setuptools
       - run: pip install -e ".[dev]"
       - name: lint
-        run: python -m ruff check src tests
+        run: python -m ruff check src tests tools
       - name: types
         run: python -m mypy
       - name: SAST
-        run: python -m bandit -q -r src
+        run: python -m bandit -q -r src tools
       - name: dependency advisories
         run: python -m pip_audit --progress-spinner off
       - name: coverage gate

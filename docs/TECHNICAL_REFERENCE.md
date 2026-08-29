@@ -6,7 +6,7 @@ as they are; this file is the part you need open while writing code against
 them.
 
 Package `governed_edge_ai`, distribution `edge-ai-refusal-runtime`. The two
-names differ on purpose — [ADR 0010](adr/0010-repository-name-and-frozen-schema-ids.md).
+names differ on purpose, [ADR 0010](adr/0010-repository-name-and-frozen-schema-ids.md).
 
 ---
 
@@ -20,11 +20,11 @@ JSON with sorted keys, `(",", ":")` separators, `ensure_ascii=False`, and
 
 | Function | Returns | Refuses |
 |---|---|---|
-| `canonical_bytes(payload)` | `bytes` | NaN, ±Infinity — a digest over a value that does not round-trip is not a digest |
+| `canonical_bytes(payload)` | `bytes` | NaN, ±Infinity, a digest over a value that does not round-trip is not a digest |
 | `digest(payload)` | `"sha256:<64 hex>"` | as above |
-| `digest_bytes(raw)` | `"sha256:<64 hex>"` | — |
-| `digest_file(path, chunk_size=1MiB)` | `"sha256:<64 hex>"` | — streams, so a model artefact never has to fit in memory |
-| `is_digest(value)` | `bool` | — |
+| `digest_bytes(raw)` | `"sha256:<64 hex>"` |  |
+| `digest_file(path, chunk_size=1MiB)` | `"sha256:<64 hex>"` |, streams, so a model artefact never has to fit in memory |
+| `is_digest(value)` | `bool` |  |
 
 Key order does not affect the digest; Unicode is **not** normalised, so two
 distinct code-point sequences that render identically produce different digests.
@@ -39,7 +39,7 @@ whose behaviour depends on wall-clock time cannot be tested at its boundary.
 
 ### `errors.py`
 
-One exception per governance failure mode, each with a stable `code` — the code
+One exception per governance failure mode, each with a stable `code`, the code
 is what a fleet operator greps for, so it is API.
 
 `ConfigurationError` · `SignatureInvalid` · `AdmissionRefused` ·
@@ -48,7 +48,7 @@ is what a fleet operator greps for, so it is API.
 
 ---
 
-## `registry/` — the admission gate
+## `registry/`: the admission gate
 
 ### Model card (`schema.py`)
 
@@ -113,7 +113,7 @@ A missing artefact is a **failed** check, never a skipped one.
 
 ---
 
-## `journal/` — tamper-evident record
+## `journal/`: tamper-evident record
 
 ### Record format (`chain.py`)
 
@@ -151,7 +151,7 @@ non-UTF-8 content, a path that is not a file, and an **empty file**.
 An empty journal is reported as a failure, not as `verified: 0 entries`. An
 erased journal and a never-written one are the same bytes, and affirming either
 would be the manufactured assurance this project exists to refuse. Telling them
-apart needs an external record of the expected head — [ADR 0007](adr/0007-external-anchoring-out-of-scope.md).
+apart needs an external record of the expected head, [ADR 0007](adr/0007-external-anchoring-out-of-scope.md).
 
 Does **not** detect: a consistent rewrite by a holder of the device key, or
 truncation after the last checkpoint. Both are accepted limitations with tests
@@ -164,7 +164,7 @@ previous checkpoint, signed with the device key when one is configured.
 
 ---
 
-## `policy/` — default deny
+## `policy/`: default deny
 
 Rules are JSON data (`policies/*.json`, schema `governed-edge-ai/policy/v1`), so
 a risk officer can diff what was in force on a given date. **Do not replace a
@@ -178,11 +178,11 @@ Numeric comparisons (`gt`, `gte`, `lt`, `lte`) exclude `bool` on both sides.
 `True < 1.0` is true in Python and must not be true in a policy.
 
 `budget.py` tracks allocations over an optional window. Exhaustion raises
-`BudgetExhausted` **and engages the stop channel** — [ADR 0008](adr/0008-budget-exhaustion-engages-the-stop.md).
+`BudgetExhausted` **and engages the stop channel**, [ADR 0008](adr/0008-budget-exhaustion-engages-the-stop.md).
 
 ---
 
-## `oversight/` — stop and confirmation
+## `oversight/`: stop and confirmation
 
 `SimulatedRelay` boots **de-energised**, so the stop channel starts engaged.
 Releasing requires a named operator; `""` and `"unattended"` are rejected.
@@ -191,15 +191,15 @@ Releasing requires a named operator; `""` and `"unattended"` are rejected.
 
 Confirmers implement `confirm(request_summary, reasons) -> (approved, operator_id)`.
 The default is `AbsentOperator`, which refuses. An escalation nobody answers is
-a refusal, never a permission — [ADR 0009](adr/0009-silence-is-refusal.md).
+a refusal, never a permission, [ADR 0009](adr/0009-silence-is-refusal.md).
 
 ---
 
-## `marking/` — AI Act Article 50
+## `marking/`: AI Act Article 50
 
 Produces a **detached** provenance manifest (`governed-edge-ai/provenance/v1`)
 carrying `input_digest`, `output_digest`, `model_id`, `model_version`,
-`card_digest`, and disclosure text — digests, so provenance can be published
+`card_digest`, and disclosure text, digests, so provenance can be published
 without disclosing the input.
 
 The manifest must **not** carry the hash of the journal entry that records the
@@ -208,9 +208,9 @@ way only.
 
 ---
 
-## `hal/` — devices
+## `hal/`: devices
 
-`DeviceProfile` declares `available_controls` — what a device class **can**
+`DeviceProfile` declares `available_controls`, what a device class **can**
 enforce, which is what the admission gate needs. It is **not** a job assignment;
 see the module docstring.
 
@@ -218,7 +218,7 @@ see the module docstring.
 |---|---|---|
 | `uno-q` | all five | Debian, durable filesystem |
 | `ventuno-q` | all five | STM32H5 on Zephyr for actuation |
-| `uno-r4-wifi` | four — **not** `inference_journal` | no durable append-only storage, so a high-risk card is refused |
+| `uno-r4-wifi` | four, **not** `inference_journal` | no durable append-only storage, so a high-risk card is refused |
 | `alvik` | `policy_mediation`, `stop_channel` | the actuated system |
 | `nesso-n1` | `human_confirmation`, `stop_channel` | LoRa oversight console |
 
@@ -227,15 +227,15 @@ Unported backends raise `NotPortedError` with a specific porting note. Every
 
 ---
 
-## `agent/runtime.py` — the order
+## `agent/runtime.py`: the order
 
 `GovernedRuntime.act(request)` runs, and the order is load-bearing:
 
-1. **stop channel** — before the request is evaluated at all
-2. **policy** — default deny
-3. **human oversight** — only if policy said `require_human`
-4. **budgets** — last, so a concurrent spend cannot overtake the check
-5. **actuation** — via the HAL
+1. **stop channel**: before the request is evaluated at all
+2. **policy**: default deny
+3. **human oversight**: only if policy said `require_human`
+4. **budgets**: last, so a concurrent spend cannot overtake the check
+5. **actuation**: via the HAL
 
 Every branch writes to the journal, including every refusal.
 
@@ -265,7 +265,7 @@ Exit codes: `0` success, `1` a refusal or a failed verification.
   [CONTROL_MAP.md](CONTROL_MAP.md) with the test that proves it refuses.
 - **A new rule**: JSON in `policies/`. Never a callable.
 - **A new board**: a `DeviceProfile` plus an unported backend with a porting
-  note. Conservative by default — claim a control only once it is demonstrated
+  note. Conservative by default, claim a control only once it is demonstrated
   on the bench, and say so in the build log.
 - **A new record kind**: add to `KINDS`, or `verify_journal` rejects it.
 - **A schema identifier**: never change an existing one. → ADR 0010.

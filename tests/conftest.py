@@ -77,7 +77,7 @@ def high_risk_card(artifact) -> dict[str, Any]:
         "oversight": {"human_in_the_loop": True, "stop_channel_required": True},
         "transparency": {
             "marks_synthetic_output": True,
-            "disclosure_text": "Automated visual inspection — AI generated result.",
+            "disclosure_text": "Automated visual inspection, AI generated result.",
         },
         "controls_required": ["inference_journal", "policy_mediation"],
         "valid_from": "2026-08-01T00:00:00Z",

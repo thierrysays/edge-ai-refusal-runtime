@@ -1,4 +1,4 @@
-# ADR 0006 — No hardware root of trust (accepted gap)
+# ADR 0006, No hardware root of trust (accepted gap)
 
 **Status:** accepted · 2026-08-21
 
@@ -11,7 +11,7 @@ file.
 
 ## Decision
 
-Ship it, and say so — here, in the README, and in the control map's
+Ship it, and say so, here, in the README, and in the control map's
 "claims deliberately not made" table.
 
 The alternative available today would be to encrypt the key file with a
@@ -23,7 +23,7 @@ creating the appearance that it has.
 A secure element with a non-extractable key: the ATECC608 on the Qwiic bus, the
 secure element on the STM32U585 (UNO Q) or STM32H5 (VENTUNO Q), or Qualcomm's
 secure boot chain on the Dragonwing parts. Each changes `SigningKey` and nothing
-else — the signing interface was kept narrow for exactly this reason.
+else, the signing interface was kept narrow for exactly this reason.
 
 ## Consequence
 

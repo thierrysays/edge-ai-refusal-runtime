@@ -8,3 +8,6 @@ dist/
 run/
 *.jsonl
 !examples/*.jsonl
+.coverage
+.mypy_cache/
+.ruff_cache/
