@@ -8,7 +8,7 @@ is **refusals with evidence**, not features.
 
 ```bash
 pip install -e ".[dev]"
-make test          # 113 tests, ~0.5s
+make test          # 132 tests, ~0.5s
 make demo          # deterministic scenario -> ./run
 make verify        # independent journal verification
 make qa            # lint, strict types, SAST, dependency advisories, coverage gate
