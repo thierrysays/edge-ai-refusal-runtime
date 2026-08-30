@@ -30,6 +30,12 @@ contains. A tag is a pointer; this is the statement.
   records a known limitation rather than a defence.
 - **Separable test layers**: `make smoke|unit|functional|security|docs`, with
   security and the fuzzer as their own CI job.
+- **Sentry in the fuzzer's CI job** (`tools/sentry_ci.py`): an unexpected
+  crash found by `tools/fuzz_evidence.py` is reported to Sentry, in addition
+  to the stderr line that already fails the build, so a finding survives past
+  the log that raised it. Dev/CI tooling only, behind the new `ci` extra: off
+  without `SENTRY_DSN`, and `governed_edge_ai` neither imports it nor gains a
+  second runtime dependency.
 
 ### Fixed
 

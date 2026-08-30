@@ -29,6 +29,8 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+import sentry_ci  # noqa: E402
+
 from governed_edge_ai.canonical import canonical_bytes  # noqa: E402
 from governed_edge_ai.errors import ConfigurationError, JournalIntegrityError  # noqa: E402
 from governed_edge_ai.journal.chain import verify_journal  # noqa: E402
@@ -97,6 +99,8 @@ def fuzz_journal(rng: random.Random, iterations: int, sample: list[dict[str, Any
                     f"{type(exc).__name__}: {exc}",
                     file=sys.stderr,
                 )
+                sentry_ci.report(exc, tool="fuzz_evidence", target="journal",
+                                  seed=rng_seed, iteration=iteration)
                 failures += 1
                 if failures > 3:
                     return failures
@@ -118,6 +122,8 @@ def fuzz_card(rng: random.Random, iterations: int, sample: dict[str, Any]) -> in
                 f"{type(exc).__name__}: {exc}\n  input: {json.dumps(mutated)[:400]}",
                 file=sys.stderr,
             )
+            sentry_ci.report(exc, tool="fuzz_evidence", target="card",
+                              seed=rng_seed, iteration=iteration)
             failures += 1
             if failures > 3:
                 return failures
@@ -136,6 +142,8 @@ def fuzz_card(rng: random.Random, iterations: int, sample: dict[str, Any]) -> in
                 f"that cannot be canonicalised: {type(exc).__name__}: {exc}",
                 file=sys.stderr,
             )
+            sentry_ci.report(exc, tool="fuzz_evidence", target="card-canonicalise",
+                              seed=rng_seed, iteration=iteration)
             failures += 1
     return failures
 

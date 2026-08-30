@@ -35,10 +35,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e ".[dev]"
+      # The `ci` extra is dev/CI tooling (see tools/sentry_ci.py), not something
+      # the governed runtime needs. Installed here, not in the other jobs, so it
+      # is obvious which job can report a fuzzer crash to Sentry.
+      - run: pip install -e ".[dev,ci]"
       - name: adversarial suite
         run: python -m pytest tests/test_adversarial.py -q
       - name: evidence fuzz
+        # SENTRY_DSN is a repository secret. Empty on a fork PR, which is a
+        # no-op for tools/sentry_ci.py, not a failure: it still fails the job
+        # on its own exit code if the fuzzer finds anything.
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           python tools/fuzz_evidence.py --iterations 4000 --seed 12
           python tools/fuzz_evidence.py --iterations 4000 --seed 2026

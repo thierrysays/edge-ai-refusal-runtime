@@ -147,6 +147,10 @@ suite pins that behaviour.
   not the accuracy number.
 - **Not a compliance certificate.** Nothing here certifies anything. It
   demonstrates that specific controls can be made to fire, and shows the cost.
+- **Not instrumented.** `governed_edge_ai` makes no network call and reports to
+  no one. Sentry is wired into the fuzzer's CI job only (`tools/sentry_ci.py`),
+  to track crash findings across runs; it is off by default, absent from the
+  runtime dependency, and never a vote in whether a check passes.
 
 ## The name, and the other two repositories
 

@@ -19,6 +19,10 @@ dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10", "bandit>=1.7", "pip-audit>=2.7"]
+# Crash reporting for the fuzzer in CI, nothing the shipped package imports.
+# Kept out of `dev` on purpose: a contributor building and testing the
+# governed runtime does not need it, only the CI job that has SENTRY_DSN.
+ci = ["sentry-sdk>=2"]
 
 [project.scripts]
 gea = "governed_edge_ai.cli:main"
