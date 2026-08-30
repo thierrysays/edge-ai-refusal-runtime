@@ -147,6 +147,9 @@ suite pins that behaviour.
   not the accuracy number.
 - **Not a compliance certificate.** Nothing here certifies anything. It
   demonstrates that specific controls can be made to fire, and shows the cost.
+- **Not phoning home.** Crash telemetry (Sentry) is off unless `SENTRY_DSN` is
+  set and the `observability` extra is installed; it reports an unhandled bug,
+  never a governance refusal, and never a payload. → [Technical reference](docs/TECHNICAL_REFERENCE.md#observabilitypy-crash-telemetry-opt-in)
 
 ## The name, and the other two repositories
 

@@ -19,6 +19,7 @@ from .canonical import digest_file
 from .clock import SystemClock
 from .hal.devices import PROFILES
 from .journal import verify_journal
+from .observability import init_sentry, report_crash
 from .policy import PolicyEngine
 from .registry import RuntimeContext, SigningKey, TrustStore, admit, sign_card
 from .registry.signing import TRUST_STORE_SCHEMA
@@ -243,9 +244,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    init_sentry(release=f"governed-edge-ai@{__version__}")
     parser = build_parser()
     args = parser.parse_args(argv)
-    return int(args.func(args))
+    try:
+        return int(args.func(args))
+    except Exception as exc:
+        report_crash(exc)
+        raise
 
 
 if __name__ == "__main__":  # pragma: no cover

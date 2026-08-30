@@ -47,7 +47,7 @@ credible.
 ## Before opening a pull request
 
 ```
-make test        # 136 test functions, five layers, fast first
+make test        # 145 test functions, five layers, fast first
 make demo        # 4 refusals, 1 escalation, a verifiable journal
 make verify
 ```
