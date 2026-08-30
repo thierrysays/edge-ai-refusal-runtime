@@ -256,6 +256,31 @@ gea policy      load a policy and print its rules
 
 Exit codes: `0` success, `1` a refusal or a failed verification.
 
+## `observability.py`: crash telemetry, opt-in
+
+Not a control, and not in `docs/CONTROL_MAP.md` on purpose: it sits outside
+the order in `agent/runtime.py` and cannot influence a governance decision.
+`gea` calls `init_sentry()` once, at the top of `main()`; it is a silent
+no-op unless `SENTRY_DSN` is set **and** the `observability` extra
+(`pip install -e ".[observability]"`) is installed, so the default install
+stays at the one runtime dependency `pyproject.toml` declares.
+
+What it reports: an exception that escapes `main()` unhandled, which is a bug.
+What it never reports: any `GovernanceError` subclass, refusals are expected,
+already-journalled behaviour, not incidents. What it strips before anything
+leaves the process: request bodies, `extra`, and stack-frame locals
+(`before_send`, plus `include_local_variables=False`) — the same "digests, not
+payloads" discipline the journal holds itself to (invariant 7), because a
+frame can hold a model card, a signing key, or an actuation request. Every
+failure of the module itself, missing SDK, bad configuration, an unreachable
+collector, is caught and printed to stderr rather than raised: telemetry that
+could crash the tool would be worse than no telemetry.
+
+Environment variables: `SENTRY_DSN` (required to do anything),
+`SENTRY_ENVIRONMENT` (default `development`), `SENTRY_RELEASE` (default
+`governed-edge-ai@<version>`), `SENTRY_TRACES_SAMPLE_RATE` (default `0`, this
+is a CLI, not a service worth tracing by default).
+
 ---
 
 ## Extending it

@@ -19,6 +19,10 @@ dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10", "bandit>=1.7", "pip-audit>=2.7"]
+# Crash telemetry, opt-in. `observability.py` no-ops without both this extra
+# installed and SENTRY_DSN set, so the default install stays at one runtime
+# dependency; see `observability.py` for why this is not a governance control.
+observability = ["sentry-sdk>=2,<3"]
 
 [project.scripts]
 gea = "governed_edge_ai.cli:main"
@@ -58,6 +62,11 @@ strict = true
 files = ["src"]
 warn_unused_ignores = true
 warn_unreachable = true
+
+[[tool.mypy.overrides]]
+# Optional dependency, not installed by default; see the `observability` extra.
+module = ["sentry_sdk", "sentry_sdk.*"]
+ignore_missing_imports = true
 
 [tool.coverage.run]
 branch = true
