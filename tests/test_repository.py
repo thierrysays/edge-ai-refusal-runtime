@@ -3,8 +3,9 @@
 Documentation drifts silently, and in a repository whose product is a set of
 claims, a stale claim is a defect of the same kind as a broken control. Three
 sorts of drift fail the build here: a control-map row whose test no longer
-exists, a link or an ADR reference that points at nothing, and a documented test
-count that no longer matches the suite.
+exists, a link or an ADR reference that points at nothing, a documented test
+count that no longer matches the suite, and prose carrying a character the house
+register bans.
 
 The control-map check is the load-bearing one. CONTROL_MAP.md is described in
 CONTRIBUTING.md as a contract: adding a control adds a row plus its test, and
@@ -24,6 +25,10 @@ DOCS = ROOT / "docs"
 TESTS = ROOT / "tests"
 
 LINK = re.compile(r"\[[^\]]+\]\((?!https?://|mailto:)([^)#]+)")
+#: U+2014, written as an escape so this file does not trip its own check.
+EM_DASH = "\u2014"
+FENCED = re.compile(r"```.*?```", re.DOTALL)
+INLINE_CODE = re.compile(r"`[^`\n]*`")
 BACKTICKED_TEST = re.compile(r"`(test_[A-Za-z0-9_]+)")
 ADR_REFERENCE = re.compile(r"ADR (\d{4})")
 
@@ -33,6 +38,49 @@ def markdown_files() -> list[Path]:
         path for path in ROOT.rglob("*.md")
         if ".git" not in path.parts and ".venv" not in path.parts
     )
+
+
+def python_files() -> list[Path]:
+    return sorted(
+        path for path in ROOT.rglob("*.py")
+        if not {".git", ".venv", "build", "dist"} & set(path.parts)
+    )
+
+
+def markdown_prose(path: Path) -> str:
+    """The document with code removed.
+
+    Fenced blocks hold terminal transcripts, and an inline span may quote a
+    literal a program actually emits. Neither is prose, and rewriting either
+    would misquote the artefact it reproduces.
+    """
+    text = path.read_text(encoding="utf-8")
+    return INLINE_CODE.sub("", FENCED.sub("", text))
+
+
+def python_prose(path: Path) -> list[tuple[int, str]]:
+    """Docstrings and comments only, as (line number, text).
+
+    Deliberately not every string literal: `measurement-harness` emits the
+    string "synthetic, not measured" with the banned character in it, and a
+    check that reached into literals would demand the code lie about its own
+    output.
+    """
+    import io
+    import tokenize
+
+    source = path.read_text(encoding="utf-8")
+    found: list[tuple[int, str]] = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            doc = ast.get_docstring(node)
+            if doc:
+                found.append((getattr(node, "lineno", 1), doc))
+    readline = io.StringIO(source).readline
+    for token in tokenize.generate_tokens(readline):
+        if token.type == tokenize.COMMENT:
+            found.append((token.start[0], token.string))
+    return found
 
 
 def defined_tests() -> set[str]:
@@ -131,3 +179,39 @@ def test_the_schema_identifiers_are_frozen():
 
     assert RECORD_SCHEMA == "governed-edge-ai/journal-record/v1"
     assert SCHEMA_ID == "governed-edge-ai/model-card/v1"
+
+
+
+# ------------------------------------------------------------------- the register
+
+@pytest.mark.parametrize(
+    "document", markdown_files(), ids=lambda p: str(p.relative_to(ROOT))
+)
+def test_no_markdown_prose_uses_the_banned_dash(document):
+    """The house register bans U+2014 outright.
+
+    It was purged from this repository once by hand, and a branch reintroduced
+    seven of them two months later, in the one file its pull request existed
+    for, while its own commit message claimed otherwise. A convention nothing
+    reads is a convention that decays.
+    """
+    prose = markdown_prose(document)
+    offenders = [
+        line for line in prose.splitlines() if EM_DASH in line
+    ]
+    assert not offenders, (
+        f"{document.relative_to(ROOT)} uses U+2014 in prose: {offenders[0].strip()[:70]}"
+    )
+
+
+@pytest.mark.parametrize(
+    "module", python_files(), ids=lambda p: str(p.relative_to(ROOT))
+)
+def test_no_docstring_or_comment_uses_the_banned_dash(module):
+    """Docstrings carry this repository's argument, so the rule applies to them."""
+    offenders = [
+        (lineno, text) for lineno, text in python_prose(module) if EM_DASH in text
+    ]
+    assert not offenders, (
+        f"{module.relative_to(ROOT)}:{offenders[0][0]} uses U+2014 in prose"
+    )

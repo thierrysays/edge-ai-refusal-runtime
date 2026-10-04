@@ -269,7 +269,7 @@ What it reports: an exception that escapes `main()` unhandled, which is a bug.
 What it never reports: any `GovernanceError` subclass, refusals are expected,
 already-journalled behaviour, not incidents. What it strips before anything
 leaves the process: request bodies, `extra`, and stack-frame locals
-(`before_send`, plus `include_local_variables=False`) — the same "digests, not
+(`before_send`, plus `include_local_variables=False`), the same "digests, not
 payloads" discipline the journal holds itself to (invariant 7), because a
 frame can hold a model card, a signing key, or an actuation request. Every
 failure of the module itself, missing SDK, bad configuration, an unreachable

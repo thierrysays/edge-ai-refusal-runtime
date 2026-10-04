@@ -8,7 +8,7 @@ is **refusals with evidence**, not features.
 
 ```bash
 pip install -e ".[dev]"
-make test          # 145 test functions across five layers, in order
+make test          # 147 test functions across five layers, in order
 make smoke         # 8 test functions, under a second: run this first
 make security      # attacks on the controls, rather than exercises of them
 make pentest       # adversarial suite + evidence fuzzer + SAST
@@ -43,7 +43,7 @@ something regressed, do not adjust the scenario to match the new output.
 | `docs/THREAT_MODEL.md` | What is defended; residual risk R-1 to R-7 |
 | `tests/test_adversarial.py` | Attacks on the controls, not exercises of them |
 | `tests/test_smoke.py` | Does it start, and does every entry point answer |
-| `tests/test_repository.py` | The control map is a contract, enforced. 145 test functions |
+| `tests/test_repository.py` | The control map is a contract, enforced. 147 test functions |
 | `tools/fuzz_evidence.py` | Mutation fuzzer over `verify_journal()` and `validate_card()` |
 | `docs/BARE_METAL.md` | Unboxed UNO Q to a relay that drops out. Untested until the bench says otherwise |
 
