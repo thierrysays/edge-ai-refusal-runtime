@@ -9,5 +9,7 @@ run/
 *.jsonl
 !examples/*.jsonl
 .coverage
+.coverage.*
+htmlcov/
 .mypy_cache/
 .ruff_cache/

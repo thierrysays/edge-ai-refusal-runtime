@@ -196,3 +196,109 @@ governance repository that only advertises what it does well is a brochure.
    measurement.
 3. Move the actuation loop to the STM32H5 on the VENTUNO Q under Zephyr, so a
    Linux stall cannot keep the machine running.
+
+---
+
+## 2026-08-21, Day 1, later: two things that are not this repository
+
+### What prompted it
+
+Two pieces of work kept being described as "part of the programme" while
+plainly not being part of *this*: fleet operations (OTA, rollback, SBOM,
+reproducible builds, orchestration on constrained nodes) and a measurement
+harness for power, latency and thermal throttling under sustained inference.
+
+Both use the whole rig rather than any one board. Both are hardware-agnostic in
+a way this repository is deliberately not: `hal/devices.py` names five specific
+boards, because the admission gate has to know what each can enforce. A
+measurement harness that names five boards is a benchmark script for one lab.
+
+So: two separate repositories, and → ADR 0011 recording why, at what cost.
+
+### `measurement-harness`
+
+Instrument-agnostic by construction. The core knows `open` / `read` / `close`
+returning volts and amps, and nothing else: a shunt monitor, a bench supply
+over SCPI, a USB-C analyser and a synthetic generator are the same shape.
+
+The rule the whole thing is built around: **a figure that was not measured never
+leaves labelled as one.** `provenance.kind` is derived from the instrument, not
+asserted by the caller, and the export refuses a synthetic report unless asked
+in as many words, at which point `source` reads `synthetic — not measured`
+permanently. That rule exists because of invariant 10 in this repository: every
+`energy_model` here is an estimate, and the only thing worse than an estimate is
+an estimate that has lost its label somewhere between two systems.
+
+Three findings while building it, none of them anticipated:
+
+- **Integration, not averaging.** Mean watts times wall-clock is right only when
+  sampling is uniform, and sampling is least uniform under exactly the sustained
+  load being characterised. `max_gap_s` is reported so a reader can see when the
+  sampler was starved.
+- **An inline sampler cannot see an inference.** Reading between units of work
+  is exactly reproducible and structurally blind to the peak draw of the work
+  itself. That is not a bug to fix; it is why there are two samplers and why the
+  report records which one ran. → its ADR 0003.
+- **The throttle detector needed an anti-noise rule before it needed anything
+  else.** A single slow window in a long run is a log rotation, not a thermal
+  limit. Without the consecutive-window rule the detector reports throttling
+  every time something else happens on the machine.
+
+The verdict says *throughput regressed*, never *the device throttled*, unless a
+temperature series is present. Sustained slowdown has several causes and the
+harness observes one symptom.
+
+61 tests, `mypy --strict` clean, 96 % coverage, no runtime dependencies.
+`ina219.py` is written from the datasheet, has driven nothing, and refuses to
+return readings, the same `NotPortedError` pattern as `hal/devices.py` here.
+
+### `fleet-ops-lab`
+
+Two rules, and everything else follows.
+
+**Silence is a rollback.** Activation is provisional: it starts a confirmation
+window, and a node that does not check in reverts on its own timer, consulting
+no server. The state that must survive a power cut is `PENDING`, and `PENDING`
+reverts. This is the same argument as ADR 0009 in this repository (an
+escalation nobody answers is a refusal), arriving at the same place from
+operations rather than from oversight, which was not planned and is probably the
+most interesting thing about the pair.
+
+**The fleet halts itself.** A wave over its failure budget stops the rollout,
+with no flag to continue, because the flag gets set at three in the morning.
+
+The failure that took longest to model properly was the transfer that
+*succeeds* and delivers the wrong bytes. A "did the download work" check misses
+it entirely, which is why `digest-mismatch` is a separate code from
+`transport-failure` and why `FlakyTransport` can truncate as well as drop.
+
+No cryptography ships in it. Whoever runs a fleet already has a key story, and
+the package will not choose one for them, but an *absent* verifier with a
+required quorum raises rather than passing, on the same principle as invariant 6
+here: a missing artefact is a failed check, not a skipped one.
+
+67 tests, `mypy --strict` clean, 96 % coverage, no runtime dependencies. Every
+node is a Python object; nothing has met a power switch. `docs/PORTING.md` in
+that repository lists what the first bench port is expected to find wrong,
+starting with the write ordering around `PENDING`.
+
+### What this changes here
+
+Nothing in `src/`. Invariant 10 stands unchanged (every `energy_model` is still
+labelled `estimate`), but the replacement now has a named producer and a named
+format, and `energy_model_source` will carry the harness's `source` string
+verbatim, digest and all.
+
+### Where they went
+
+Both are their own repositories, pushed the same day:
+
+* <https://github.com/thierrysays/measurement-harness>
+* <https://github.com/thierrysays/fleet-ops-lab>
+
+They were built in a working directory here and staged briefly under
+`spinoff/`, because the GitHub App backing the session cannot create
+repositories (`403 Resource not accessible by integration`). Once the two
+remotes existed the trees were transplanted and the directory removed, so
+nothing of either project remains in this one, which is the whole point of
+ADR 0011, and would have been quietly undone by leaving them here.

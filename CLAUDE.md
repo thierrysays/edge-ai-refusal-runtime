@@ -8,7 +8,7 @@ is **refusals with evidence**, not features.
 
 ```bash
 pip install -e ".[dev]"
-make test          # 145 test functions across five layers, in order
+make test          # 147 test functions across five layers, in order
 make smoke         # 8 test functions, under a second: run this first
 make security      # attacks on the controls, rather than exercises of them
 make pentest       # adversarial suite + evidence fuzzer + SAST
@@ -43,7 +43,7 @@ something regressed, do not adjust the scenario to match the new output.
 | `docs/THREAT_MODEL.md` | What is defended; residual risk R-1 to R-7 |
 | `tests/test_adversarial.py` | Attacks on the controls, not exercises of them |
 | `tests/test_smoke.py` | Does it start, and does every entry point answer |
-| `tests/test_repository.py` | The control map is a contract, enforced. 145 test functions |
+| `tests/test_repository.py` | The control map is a contract, enforced. 147 test functions |
 | `tools/fuzz_evidence.py` | Mutation fuzzer over `verify_journal()` and `validate_card()` |
 | `docs/BARE_METAL.md` | Unboxed UNO Q to a relay that drops out. Untested until the bench says otherwise |
 
@@ -93,6 +93,21 @@ layers, `tools/fuzz_evidence.py` fuzzes the journal and card parsers, and
 `tests/test_repository.py` fails the build when the control map cites a test
 that does not exist. What remains open is stated in that document, and the list
 is short: nothing has run on hardware.
+## Repository metadata
+
+**Every repository carries `glossolalie-advisory` as a topic.** It is the common
+tag across the whole portfolio, the one that makes the family findable from a
+single search, and it sits alongside the repository's own descriptive topics
+rather than replacing them. A new repository is not finished until it has it.
+
+The rest of the topic list describes *this* repository: what it does, what it
+runs on, what standard it answers to. Aim for ten to twenty, lower-case and
+hyphenated, and prefer terms somebody would actually search for over terms that
+merely sound thorough.
+
+The description is one sentence saying what the thing refuses or measures, not
+what category it belongs to.
+
 
 ## Conventions
 
@@ -141,6 +156,14 @@ Deleting a test deletes the row.
   transmission belongs to whoever operates the fleet. → ADR 0007.
 - **`SimulatedModel` is a stand-in**, not a detector. Its two knobs (miss rate
   and false-alarm rate) are the governance events that matter.
+- **Fleet operations and measurement are somebody else's repository.** OTA,
+  rollback, SBOM, reproducible builds and container orchestration live in
+  `fleet-ops-lab`; power, latency and thermal measurement live in
+  `measurement-harness`. Both are hardware-agnostic, neither depends on this
+  package, and this package depends on neither. → ADR 0011. The only interface
+  is a file: a `measurement-harness/energy-model/v1` export replaces a
+  `DeviceProfile.energy_model`, and its `source` string is copied **verbatim**
+  into `energy_model_source`. Do not add either as a dependency.
 - **The device profiles are capability, not job assignment.** `available_controls`
   records what a board *can* enforce, which is what the admission gate needs to
   know. It does not say which job that board holds in a rig. The sibling
@@ -158,7 +181,9 @@ Nothing has run on hardware. In priority order:
    **de-energised**. Everything else is theory until that is observed.
    Start at `hal/devices.py::UnoQDevice.porting_note`.
 2. Replace one `energy_model` estimate with a measured figure (INA219 over
-   Qwiic) and record the gap in `docs/BUILD_LOG.*`.
+   Qwiic) and record the gap in `docs/BUILD_LOG.*`. The producer is the sibling
+   `measurement-harness`; its `ina219.py` porting note is the specification, and
+   its export refuses to hand over a figure that was not measured.
 3. Move the actuation loop to the **STM32H5 on the VENTUNO Q** under Zephyr, so
    a Linux stall cannot keep the machine running.
 
