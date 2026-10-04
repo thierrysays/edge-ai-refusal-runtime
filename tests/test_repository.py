@@ -34,9 +34,12 @@ ADR_REFERENCE = re.compile(r"ADR (\d{4})")
 
 
 def markdown_files() -> list[Path]:
+    # Any dot directory is excluded, not just .git and .venv: .pytest_cache
+    # ships a README of its own, and a generated file is not this repository's
+    # prose to answer for.
     return sorted(
         path for path in ROOT.rglob("*.md")
-        if ".git" not in path.parts and ".venv" not in path.parts
+        if not any(part.startswith(".") for part in path.parts)
     )
 
 
