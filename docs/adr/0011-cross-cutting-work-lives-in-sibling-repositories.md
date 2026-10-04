@@ -1,4 +1,4 @@
-# ADR 0011 — Fleet operations and measurement are separate repositories
+# ADR 0011, Fleet operations and measurement are separate repositories
 
 **Status:** accepted · 2026-08-21
 
@@ -7,12 +7,12 @@
 Two pieces of work use the whole rig rather than any one board, and both were
 candidates for landing here.
 
-**Fleet operations** — over-the-air update, rollback, SBOM, reproducible builds,
+**Fleet operations**: over-the-air update, rollback, SBOM, reproducible builds,
 container orchestration on constrained nodes. It is what an industrial buyer
 asks about before they ask anything about the model, and it is the least
 glamorous work in the programme.
 
-**A measurement harness** — power, latency and thermal throttling under
+**A measurement harness**: power, latency and thermal throttling under
 sustained inference, across the five boards. It turns the lab into an
 instrument, and it is the only thing that can replace the `energy_model`
 estimates this repository currently carries.
@@ -23,10 +23,10 @@ Both are useful to this repository. Neither belongs in it.
 
 Both become separate, hardware-agnostic repositories:
 
-* [`fleet-ops-lab`](https://github.com/thierrysays/fleet-ops-lab) — A/B slots
+* [`fleet-ops-lab`](https://github.com/thierrysays/fleet-ops-lab): A/B slots
   with automatic rollback, digest-bound manifests, SBOM diffing,
   reproducible-build checking, waved rollouts with a halt rule.
-* [`measurement-harness`](https://github.com/thierrysays/measurement-harness) —
+* [`measurement-harness`](https://github.com/thierrysays/measurement-harness):
   instrument-agnostic power, latency and thermal measurement, emitting
   verifiable reports.
 
@@ -62,8 +62,8 @@ nothing mechanically couples them. The energy figure will cross that boundary as
 a file that somebody copies, which is exactly the kind of manual step that goes
 stale.
 
-Accepted, because the alternative — a governance repository that also owns a
-benchmark suite and a deployment tool — makes the governance claim harder to
+Accepted, because the alternative (a governance repository that also owns a
+benchmark suite and a deployment tool) makes the governance claim harder to
 audit, and auditability is the whole product.
 
 ## Consequence
