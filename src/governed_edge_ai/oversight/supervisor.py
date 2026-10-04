@@ -4,7 +4,7 @@ The default confirmer is :class:`AbsentOperator`, which refuses. This is the
 single most consequential default in the codebase, so it is worth stating the
 argument plainly: an escalation that nobody answers is a refusal, not a
 permission. Systems that treat an unanswered escalation as approval are
-performing oversight theatre — the escalation exists to produce a record, not a
+performing oversight theatre, the escalation exists to produce a record, not a
 decision.
 
 The cost is real. A production line whose operator has stepped away stops. That
@@ -47,7 +47,7 @@ class AbsentOperator:
 
 @dataclass
 class CallbackConfirmer:
-    """Delegates to a callable — a console prompt, an MQTT round trip, a button.
+    """Delegates to a callable, a console prompt, an MQTT round trip, a button.
 
     On the target build this is the Modulino Buttons node: approval is a
     physical press, which cannot be produced by the model asking for it.

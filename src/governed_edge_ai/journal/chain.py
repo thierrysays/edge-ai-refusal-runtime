@@ -14,7 +14,7 @@ What this buys and what it does not:
   it.
 * It does **not** buy tamper *resistance*. An attacker with the device key and
   write access can rewrite the whole file consistently. Countering that needs
-  an external anchor — shipping checkpoint roots off-device to a witness — which
+  an external anchor (shipping checkpoint roots off-device to a witness) which
   :meth:`Journal.checkpoint` produces but this module deliberately does not
   transmit. See ADR 0007.
 """
@@ -198,8 +198,8 @@ class Journal:
         """Seal every record since the last checkpoint under a signed root.
 
         The returned record is the artefact you would ship to an external
-        witness. It contains no payload — only a range, a root, and a signature
-        — so it can be published without disclosing what the device inferred.
+        witness. It contains no payload, only a range, a root, and a signature
+, so it can be published without disclosing what the device inferred.
         """
         with self._lock:
             covers_from = self._checkpoint_from
@@ -369,7 +369,7 @@ def verify_journal(path: str, trust_store: TrustStore | None = None) -> Verifica
         # verifier cannot tell them apart and must not affirm either: saying
         # "verified" about nothing is the manufactured assurance this project
         # exists to refuse. Detecting *which* of the two it is needs an external
-        # record of the expected head — see ADR 0007.
+        # record of the expected head, see ADR 0007.
         return VerificationReport(
             ok=False, entries=0, checkpoints=checkpoints, head=GENESIS_HASH,
             broken_at=None,

@@ -1,7 +1,7 @@
 """Adversarial suite: attacks the controls rather than exercising them.
 
 The rest of the suite asks whether a control fires when it should. This file
-asks whether it can be made *not* to fire by someone trying — signature
+asks whether it can be made *not* to fire by someone trying, signature
 transplant, key substitution, quorum-by-repetition, algorithm confusion,
 backdating, chain reordering, and canonicalisation collisions.
 

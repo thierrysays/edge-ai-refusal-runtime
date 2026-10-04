@@ -2,7 +2,7 @@
 
 Why a Merkle root on top of an already-chained log: the chain proves *order and
 completeness* to whoever holds the whole file, but an auditor rarely wants the
-whole file — they want to prove that one specific inference happened, without
+whole file, they want to prove that one specific inference happened, without
 being handed every other inference the device ever made. The root lets a single
 record be proven against a signed checkpoint with a logarithmic proof, which is
 the difference between disclosing an event and disclosing a database.

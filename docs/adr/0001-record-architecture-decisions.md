@@ -1,4 +1,4 @@
-# ADR 0001 — Record architecture decisions
+# ADR 0001, Record architecture decisions
 
 **Status:** accepted · 2026-08-21
 
@@ -6,7 +6,7 @@
 
 A governance repository whose own decisions are undocumented is an argument
 against itself. The interesting content of this project is not the code but the
-choices — most of which have a cost that a reader is entitled to weigh.
+choices, most of which have a cost that a reader is entitled to weigh.
 
 ## Decision
 

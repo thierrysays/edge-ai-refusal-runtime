@@ -2,7 +2,7 @@
 
 AI Act Article 14 requires that a high-risk system can be interrupted by a human
 "through a stop button or a similar procedure". The clause is usually satisfied
-on paper by an application-level flag — which is to say, by asking the software
+on paper by an application-level flag, which is to say, by asking the software
 that may be misbehaving to please stop misbehaving.
 
 This module treats the stop channel as an independent subsystem with three

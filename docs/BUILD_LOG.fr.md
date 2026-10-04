@@ -2,18 +2,97 @@
 
 Ce qui a été construit, dans quel ordre, et ce qui était faux en chemin. Tenu
 parce que la matière intéressante d'un projet de gouvernance, ce sont les
-arbitrages — et qu'un arbitrage n'est lisible que tant que ses raisons sont
+arbitrages, et qu'un arbitrage n'est lisible que tant que ses raisons sont
 fraîches.
 
 ---
 
-## 21 août 2026 — Jour 1
+## 21 août 2026, plus tard le même jour
+
+### La norme, et quatre manques comblés
+
+`docs/STANDARD_OF_WORK.md` énonce ce que « terminé » signifie dans ces dépôts :
+documentation fonctionnelle et technique, parcours pour néophyte, parcours bare
+metal, harnais de test à sept couches, modèle de menaces, et une entrée de
+journal bilingue. Ce document nommait aussi quatre endroits où ce dépôt restait
+en deçà de sa propre norme. Les quatre sont comblés, et les combler a produit
+deux constats qui ne figuraient au plan de personne.
+
+### Le fuzzer a trouvé une fiche qui faisait tomber la porte
+
+`tools/fuzz_evidence.py` mute des enregistrements de journal et des fiches de
+modèle, et vérifie une seule propriété : `verify_journal()` et `validate_card()`
+répondent par un résultat ou par une erreur de gouvernance nommée, quoi qu'on
+leur donne.
+
+Dès la première exécution, à la graine 12, une fiche portant
+`"valid_from": null` a levé `AttributeError: 'NoneType' object has no attribute
+'replace'` depuis `parse_iso()`. Tout l'argument de la porte d'admission tient à
+ceci : un refus arrive avec un motif sur lequel un opérateur peut agir. Une
+trace d'exécution n'est pas un motif. Un opérateur incapable de savoir pourquoi
+un modèle a été refusé finira par désactiver la porte, ce qui fait de ce défaut
+un défaut de gouvernance déguisé en erreur de type.
+
+Corrigé dans la fonction partagée plutôt qu'au point d'appel : `parse_iso()`
+accepte désormais `object`, déclare dans sa docstring qu'elle se tient sur une
+frontière de confiance, et refuse une valeur non textuelle en nommant le type
+reçu. Six tests négatifs paramétrés la verrouillent, et le fuzzer tourne propre
+sur cinq graines à 3 000 itérations chacune.
+
+Un échec antérieur venait du fuzzer lui-même et mérite d'être consigné : il
+distribuait deux fois le même dictionnaire imbriqué, ce qui produisait une fiche
+auto-référente et une erreur de « référence circulaire » qui ne disait rien du
+code testé. Les valeurs de mutation sont maintenant copiées en profondeur. Un
+constat qui se révèle porter sur le harnais vaut tout de même l'heure passée :
+l'alternative consiste à faire confiance à un harnais qui ment.
+
+### La carte des contrôles n'était pas encore un contrat
+
+`tests/test_repository.py` fait respecter ce que CONTRIBUTING.md affirme depuis
+le premier jour : ajouter un contrôle ajoute une ligne et son test, supprimer un
+test supprime la ligne. La construction échoue quand la carte nomme un test qui
+n'existe pas, quand un lien ou une référence d'ADR ne pointe sur rien, quand un
+`energy_model` perd son étiquette `estimate`, ou quand le nombre de tests
+documenté cesse de correspondre à la suite.
+
+Le contrôle a trouvé de la dérive dès sa première exécution, dans les deux sens.
+Le nombre documenté annonçait 113 alors que la suite comptait 119 fonctions de
+test. Et toute la suite adverse, dix-neuf attaques dont celle qui consigne une
+limite plutôt qu'une défense, n'était nommée nulle part dans la carte. Celle-ci
+comporte désormais une section Adversarial avec ces dix-neuf lignes, plus une
+vingtième pour le constat du fuzzer.
+
+Un contrat que rien ne vérifie est une préférence. Ce fut le cas ici pendant une
+journée.
+
+### Des couches, et un guide écrit avant l'établi
+
+La suite s'exécute désormais en `smoke`, `unit`, `functional`, `security` et
+`docs`, chacune isolément, les rapides d'abord. L'intégration continue exécute
+la couche sécurité et le fuzzer dans un travail distinct, afin qu'une régression
+de sécurité soit lisible dans la liste des vérifications.
+
+`docs/BARE_METAL.md` conduit une UNO Q sortie de son carton jusqu'à un processus
+tué et un relais censé retomber. Le guide est écrit avant l'établi, l'annonce
+dès l'en-tête, et nomme ce qui démentirait chaque étape. Celle qui compte est
+l'étape 6 : tuer le processus par `SIGKILL` et observer si la lampe s'éteint. Si
+elle reste allumée, le correctif ne se trouve pas dans Python, et le guide dit
+où il se trouve.
+
+### État
+
+- 136 fonctions de test réparties en cinq couches, toutes au vert
+- Fuzzer de preuves propre sur cinq graines
+- Un défaut réel trouvé et corrigé, une dérive documentaire redressée
+- Toujours rien exécuté sur matériel
+
+## 21 août 2026, Jour 1
 
 ### Point de départ
 
 Cinq cartes, commandées entre juin et août 2026 : une UNO Q 4 Go, une VENTUNO Q,
 une UNO R4 WiFi avec les nœuds Modulino du Plug and Make Kit, un Alvik et une
-Nesso N1. Toutes ne sont pas encore sur l'établi — la VENTUNO Q est partie le
+Nesso N1. Toutes ne sont pas encore sur l'établi, la VENTUNO Q est partie le
 20 août.
 
 Cette contrainte a fixé la première décision : **la simulation d'abord**.
@@ -23,21 +102,21 @@ dépendance pour quelque chose destiné à tourner sur un parc. → ADR 0005.
 
 ### Ordre de construction
 
-1. `canonical.py` — avant tout ce qui serait haché. Clés triées, aucun espace
+1. `canonical.py` : avant tout ce qui serait haché. Clés triées, aucun espace
    non significatif, flottants non finis rejetés. Une empreinte ne vaut que le
    déterminisme des octets qui la produisent.
-2. `clock.py` — temps injectable. Une preuve qu'on ne peut rejouer est une
+2. `clock.py` : temps injectable. Une preuve qu'on ne peut rejouer est une
    anecdote.
-3. `registry/` — schéma de fiche de modèle, signature Ed25519, porte d'admission.
-4. `journal/` — primitives Merkle, puis la chaîne, puis le vérificateur
+3. `registry/` : schéma de fiche de modèle, signature Ed25519, porte d'admission.
+4. `journal/` : primitives Merkle, puis la chaîne, puis le vérificateur
    indépendant.
-5. `policy/` — décisions, moteur, budgets.
-6. `oversight/` — canaux d'arrêt, superviseur.
-7. `marking/` — provenance article 50.
-8. `hal/` — cellule simulée, puis profils de cartes.
-9. `agent/` — le runtime qui câble les cinq contrôles dans l'ordre, puis le
+5. `policy/` : décisions, moteur, budgets.
+6. `oversight/` : canaux d'arrêt, superviseur.
+7. `marking/` : provenance article 50.
+8. `hal/` : cellule simulée, puis profils de cartes.
+9. `agent/` : le runtime qui câble les cinq contrôles dans l'ordre, puis le
    scénario.
-10. `cli.py` — produire la preuve, vérifier la preuve : deux commandes distinctes.
+10. `cli.py` : produire la preuve, vérifier la preuve : deux commandes distinctes.
 
 Les tests ont été écrits en même temps que chaque module, non après. La suite
 atteint 113 tests, dont la grande majorité sont négatifs : une porte qui admet un
@@ -51,7 +130,7 @@ transplantable, et surtout cela ne dit rien de *qui* a signé ni *quand*.
 Remplacé par une structure à signer qui lie l'empreinte de la fiche,
 l'identifiant de clé du signataire et l'horodatage de signature. Les rôles sont
 ensuite résolus depuis le magasin de confiance au moment de la vérification,
-jamais lus dans l'enveloppe — ce qui ferme la confusion de rôles par la même
+jamais lus dans l'enveloppe, ce qui ferme la confusion de rôles par la même
 occasion. `test_signature_cannot_be_transplanted_between_cards` et
 `test_two_signatures_from_the_same_role_do_not_form_a_quorum` verrouillent les
 deux.
@@ -62,7 +141,7 @@ Le manifeste de provenance portait initialement l'empreinte de l'entrée de
 journal qui enregistrait l'inférence. Or cette entrée porte l'empreinte du
 manifeste. Ce n'est pas seulement inélégant : c'est incalculable. Je ne l'ai vu
 qu'après avoir écrit un `object.__setattr__` sur une dataclass gelée pour
-rapiécer le manifeste après coup — le genre de ligne qu'il faut lire comme une
+rapiécer le manifeste après coup, le genre de ligne qu'il faut lire comme une
 alarme, pas comme un contournement.
 
 Résolu en rendant le lien unidirectionnel : journal → manifeste. Un auditeur qui
@@ -105,8 +184,8 @@ Les deux sont enregistrées comme *acceptées*, non comme *reportées* :
   changerait rien au modèle de menace tout en donnant l'apparence du contraire.
   → ADR 0006.
 - **Pas d'ancrage externe.** Les points de contrôle sont produits exactement sous
-  la forme qui fermerait la fenêtre de troncature — un intervalle, une racine,
-  une signature, aucune charge utile — et délibérément non transmis, parce que le
+  la forme qui fermerait la fenêtre de troncature, un intervalle, une racine,
+  une signature, aucune charge utile, et délibérément non transmis, parce que le
   choix du témoin appartient à qui exploite le parc. → ADR 0007.
 
 Les deux figurent dans le tableau « claims deliberately not made » de la
@@ -135,14 +214,14 @@ fait bien est une plaquette commerciale.
 
 ---
 
-## 2026-08-21 — Jour 1, plus tard : deux choses qui ne sont pas ce dépôt
+## 2026-08-21, Jour 1, plus tard : deux choses qui ne sont pas ce dépôt
 
 ### Le point de départ
 
 Deux chantiers étaient constamment décrits comme « faisant partie du
-programme » sans faire partie de *celui-ci* : l'exploitation de parc — mise à
+programme » sans faire partie de *celui-ci* : l'exploitation de parc (mise à
 jour OTA, retour arrière, SBOM, builds reproductibles, orchestration sur nœuds
-contraints — et un banc de mesure pour la puissance, la latence et le bridage
+contraints) et un banc de mesure pour la puissance, la latence et le bridage
 thermique sous inférence soutenue.
 
 Les deux utilisent tout le banc plutôt qu'une carte en particulier. Les deux sont
@@ -157,14 +236,14 @@ coût.
 ### `measurement-harness`
 
 Agnostique de l'instrument par construction. Le cœur connaît `open` / `read` /
-`close` renvoyant des volts et des ampères, rien d'autre — une sonde de shunt,
+`close` renvoyant des volts et des ampères, rien d'autre : une sonde de shunt,
 une alimentation de laboratoire en SCPI, un analyseur USB-C et un générateur
 synthétique ont la même forme.
 
 La règle autour de laquelle tout est construit : **un chiffre qui n'a pas été
 mesuré ne sort jamais étiqueté comme tel.** `provenance.kind` est dérivé de
 l'instrument, jamais affirmé par l'appelant, et l'export refuse un rapport
-synthétique sauf demande explicite — auquel cas `source` porte
+synthétique sauf demande explicite, auquel cas `source` porte
 `synthetic — not measured` de façon permanente. Cette règle existe à cause de
 l'invariant 10 de ce dépôt : chaque `energy_model` y est une estimation, et la
 seule chose pire qu'une estimation est une estimation qui a perdu son étiquette
@@ -190,7 +269,7 @@ et le banc observe un symptôme.
 
 61 tests, `mypy --strict` propre, 96 % de couverture, aucune dépendance
 d'exécution. `ina219.py` est écrit d'après la fiche technique, n'a rien piloté,
-et refuse de renvoyer des lectures — le même motif `NotPortedError` que
+et refuse de renvoyer des lectures, le même motif `NotPortedError` que
 `hal/devices.py` ici.
 
 ### `fleet-ops-lab`
@@ -201,8 +280,8 @@ Deux règles, tout le reste en découle.
 une fenêtre de confirmation, et un nœud qui ne se manifeste pas revient en
 arrière sur sa propre horloge, sans interroger aucun serveur. L'état qui doit
 survivre à une coupure de courant est `PENDING`, et `PENDING` revient en arrière.
-C'est l'argument de l'ADR 0009 de ce dépôt — une escalade que personne ne traite
-est un refus — arrivé au même point depuis l'exploitation plutôt que depuis la
+C'est l'argument de l'ADR 0009 de ce dépôt (une escalade que personne ne traite
+est un refus), arrivé au même point depuis l'exploitation plutôt que depuis la
 supervision humaine. Ce n'était pas prévu, et c'est probablement ce qu'il y a de
 plus intéressant dans la paire.
 
@@ -217,7 +296,7 @@ abouti » la manque complètement : d'où un code `digest-mismatch` distinct de
 couper.
 
 Aucune cryptographie n'est embarquée. Qui exploite un parc a déjà une gestion de
-clés, et le paquet n'en imposera pas une — mais un vérificateur *absent* avec un
+clés, et le paquet n'en imposera pas une, mais un vérificateur *absent* avec un
 quorum exigé lève une erreur au lieu de laisser passer, sur le principe de
 l'invariant 6 d'ici : un artefact manquant est un contrôle en échec, pas un
 contrôle ignoré.
@@ -229,8 +308,8 @@ trouver de faux, à commencer par l'ordre d'écriture autour de `PENDING`.
 
 ### Ce que cela change ici
 
-Rien dans `src/`. L'invariant 10 tient inchangé — chaque `energy_model` reste
-étiqueté `estimate` — mais le remplacement a désormais un producteur nommé et un
+Rien dans `src/`. L'invariant 10 tient inchangé (chaque `energy_model` reste
+étiqueté `estimate`), mais le remplacement a désormais un producteur nommé et un
 format nommé, et `energy_model_source` portera la chaîne `source` du banc
 verbatim, empreinte comprise.
 
@@ -246,5 +325,5 @@ brièvement sous `spinoff/`, parce que l'application GitHub qui porte la session
 ne peut pas créer de dépôts (`403 Resource not accessible by integration`). Dès
 que les deux dépôts distants ont existé, les arborescences ont été transplantées
 et le répertoire supprimé : il ne reste donc rien de ces deux projets dans
-celui-ci — ce qui est tout l'objet de l'ADR 0011, et que les laisser ici aurait
+celui-ci, ce qui est tout l'objet de l'ADR 0011, et que les laisser ici aurait
 discrètement défait.

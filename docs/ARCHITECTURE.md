@@ -14,33 +14,33 @@ Everything below follows from trying to make that difference observable.
 
 The order is load-bearing.
 
-**1 — Stop channel.** Evaluated before anything else. A system that reasons
+**1, Stop channel.** Evaluated before anything else. A system that reasons
 about a request it is not allowed to perform is a system that will eventually
 perform it: the reasoning path is where the exceptions accumulate. The channel
 starts *engaged*, is composed disjunctively (any member engaged ⇒ stopped), and
 can only be released by a named operator. Asymmetry is deliberate: engaging
 costs nothing, releasing costs an identity.
 
-**2 — Policy.** Default deny. Every actuation request is matched against a rule
+**2, Policy.** Default deny. Every actuation request is matched against a rule
 set held as data; the strongest matching effect wins (`deny` > `require_human` >
-`allow`); no match is a refusal. The friction this produces — every new action
-must be authorised before it can run — is the product, not a side effect.
+`allow`); no match is a refusal. The friction this produces (every new action
+must be authorised before it can run) is the product, not a side effect.
 
-**3 — Human oversight.** Only for requests the policy escalated. Escalating
+**3, Human oversight.** Only for requests the policy escalated. Escalating
 everything trains operators to approve everything, which is the standard way
 Article 14 becomes a rubber stamp. The default confirmer is `AbsentOperator`,
 which refuses: an escalation nobody answers is a refusal, not a permission.
 
-**4 — Budgets.** Checked immediately before the effect, because a budget checked
+**4, Budgets.** Checked immediately before the effect, because a budget checked
 earlier can be overtaken by a concurrent spend. Budgets answer the question a
 rule set cannot: not "is this action permitted?" but "is this the four-hundredth
 permitted action in ninety seconds?".
 
-**5 — Actuation**, through the hardware abstraction layer, whose own relay check
+**5, Actuation**, through the hardware abstraction layer, whose own relay check
 is the final backstop: even with every software control bypassed, an open relay
 means nothing moves.
 
-Every step writes to the journal, including — especially — the refusals.
+Every step writes to the journal, including (especially) the refusals.
 
 ## The admission gate
 
@@ -69,8 +69,8 @@ Three properties are worth defending:
   around the gate.
 
 The most consequential check is the last one. `effective_controls(card)` is the
-**union** of the tier baseline and what the card requests — a provider cannot
-opt out by omission — and it must be a subset of what the device declares it can
+**union** of the tier baseline and what the card requests (a provider cannot
+opt out by omission), and it must be a subset of what the device declares it can
 enforce. A high-risk card on a device with no stop channel is refused. That is
 `test_runtime_without_stop_channel_cannot_run_a_high_risk_model`, and it is the
 load-bearing test of the repository.
@@ -89,7 +89,7 @@ checkpoint.body    = { covers, entry_count, merkle_root, chain_head, signature }
 
 What this buys: **tamper evidence**. An edited, deleted, or reordered record
 breaks the chain at a determinate sequence number, and `verify_journal()` names
-it. What it does not buy: **tamper resistance** — see ADR 0007.
+it. What it does not buy: **tamper resistance**, see ADR 0007.
 
 Two design choices carry more weight than they look:
 
@@ -116,7 +116,7 @@ anecdotal.
 
 ## Hardware abstraction
 
-Simulation first, boards second — for one engineering reason and one governance
+Simulation first, boards second, for one engineering reason and one governance
 reason.
 
 *Engineering*: the controls could be written, tested, and deliberately broken
@@ -129,7 +129,7 @@ control logic is identical everywhere.
 
 Profiles are conservative by construction. `uno-r4-wifi` does not list
 `inference_journal`, because a microcontroller with no durable append-only
-storage cannot hold one — so a high-risk card is refused on it, and the test
+storage cannot hold one, so a high-risk card is refused on it, and the test
 suite pins that. A profile that overstates a device is not a documentation error
 but a control failure.
 

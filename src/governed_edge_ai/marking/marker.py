@@ -1,10 +1,10 @@
-"""Output marking — AI Act Article 50.
+"""Output marking, AI Act Article 50.
 
 Article 50 is the obligation that did *not* move. The Digital Omnibus agreed in
 May 2026 deferred the Annex III high-risk regime to 2 December 2027 and the
-Annex I regime to 2 August 2028, but the transparency duties — telling people
+Annex I regime to 2 August 2028, but the transparency duties, telling people
 they are interacting with an AI system, and marking synthetic output in a
-machine-readable way — applied from 2 August 2026 and still do. Most
+machine-readable way, applied from 2 August 2026 and still do. Most
 organisations spent the spring celebrating the deferral and stopped reading.
 
 Two markings are produced, because they answer to different readers:

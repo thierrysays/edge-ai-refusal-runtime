@@ -1,8 +1,8 @@
 """Injectable time.
 
 Evidence that cannot be reproduced is not evidence. Every timestamp written to
-the journal comes from a ``Clock``, so a test — or an auditor replaying a
-scenario — can pin time and obtain byte-identical artefacts.
+the journal comes from a ``Clock``, so a test, or an auditor replaying a
+scenario, can pin time and obtain byte-identical artefacts.
 """
 
 from __future__ import annotations
@@ -55,10 +55,26 @@ def iso(moment: datetime) -> str:
     )
 
 
-def parse_iso(value: str) -> datetime:
-    """Parse an RFC 3339 timestamp, accepting the ``Z`` suffix."""
+def parse_iso(value: object) -> datetime:
+    """Parse an RFC 3339 timestamp, accepting the ``Z`` suffix.
+
+    The parameter is typed ``object`` rather than ``str`` on purpose. This
+    function is reached from :func:`validate_card`, which parses a model card
+    submitted by a provider, so the value has already crossed a trust boundary
+    by the time it arrives. A mutation fuzzer found that a card carrying
+    ``"valid_from": null`` raised ``AttributeError`` here rather than a stated
+    refusal, which in the admission gate meant a stack trace where an operator
+    needed a reason.
+    """
+    if not isinstance(value, str):
+        raise ValueError(
+            f"timestamp must be a string, got {type(value).__name__}"
+        )
     text = value.replace("Z", "+00:00")
-    moment = datetime.fromisoformat(text)
+    try:
+        moment = datetime.fromisoformat(text)
+    except ValueError as exc:
+        raise ValueError(f"not an RFC 3339 timestamp: {value!r} ({exc})") from None
     if moment.tzinfo is None:
         raise ValueError(f"timestamp without timezone: {value!r}")
     return moment.astimezone(timezone.utc)

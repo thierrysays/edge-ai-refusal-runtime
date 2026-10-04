@@ -2,7 +2,7 @@
 
 Who this defends against, who it does not, and where the line is. Written after
 an adversarial review on 21 August 2026 whose tests live in
-`tests/test_adversarial.py` — every claim below is either pinned by one of them
+`tests/test_adversarial.py`: every claim below is either pinned by one of them
 or listed as residual.
 
 ---
@@ -32,20 +32,20 @@ or listed as residual.
 
 ## What is defended, and by what
 
-### A1 — the model asks for something it should not
+### A1, the model asks for something it should not
 
 | Attack | Control | Pinned by |
 |---|---|---|
 | Act before the stop is released | Stop channel evaluated **first**, before the request is examined at all | demo refusal 1 |
 | Act outside the declared envelope | Policy deny rule on the parameter | demo refusal 2 |
 | Act on a target it was not authorised for | Policy deny on target | demo refusal 3 |
-| Act with no stated rationale | Policy deny — an action nobody can review after the fact may not be taken | demo refusal 4 |
+| Act with no stated rationale | Policy deny, an action nobody can review after the fact may not be taken | demo refusal 4 |
 | Approve its own escalation | Confirmation comes from a `Confirmer`, never from the request | `test_oversight_and_marking.py` |
 | Release its own stop | The runtime has no path to energise the relay | `test_registry_admission.py -k stop_channel` |
 | Grind through many individually-legal actions | Budgets, and exhaustion engages the stop | `test_policy.py` |
 | Exploit `True < 1.0` in a numeric rule | `bool` excluded on both sides of numeric comparisons | `test_policy.py` |
 
-### A4 — the supplier writes its own paperwork
+### A4, the supplier writes its own paperwork
 
 | Attack | Control | Pinned by |
 |---|---|---|
@@ -56,7 +56,7 @@ or listed as residual.
 | Declare a control the device cannot enforce | `controls_enforceable` fails closed | device profile tests |
 | Deploy to a device the card does not name | `deployment_target` check | `test_registry_admission.py` |
 
-### A3 — file-level tampering
+### A3, file-level tampering
 
 | Attack | Control | Pinned by |
 |---|---|---|
@@ -72,14 +72,14 @@ or listed as residual.
 
 All refused, all pinned in `tests/test_adversarial.py`:
 
-- **Transplant** — signatures lifted onto a modified card (`test_A1`); `card_digest` is inside the signed payload.
-- **Untrusted key / TOFU** — an unknown `key_id` is a refusal, not a prompt (`test_A2`).
-- **Algorithm confusion** — `alg: "none"` and anything but `ed25519` refused (`test_A6`).
-- **Empty signature list** — refused, never treated as "nothing objected" (`test_A7`).
-- **Backdating** — a signature outside the key's validity window refused (`test_A4`).
-- **Future-dating** — refused (`test_A5`).
-- **`signed_at` tampering** — it is inside the signed payload (`test_A8`).
-- **`key_id` swap between two valid signatures** — refused (`test_A9`).
+- **Transplant**: signatures lifted onto a modified card (`test_A1`); `card_digest` is inside the signed payload.
+- **Untrusted key / TOFU**: an unknown `key_id` is a refusal, not a prompt (`test_A2`).
+- **Algorithm confusion**: `alg: "none"` and anything but `ed25519` refused (`test_A6`).
+- **Empty signature list**: refused, never treated as "nothing objected" (`test_A7`).
+- **Backdating**: a signature outside the key's validity window refused (`test_A4`).
+- **Future-dating**: refused (`test_A5`).
+- **`signed_at` tampering**: it is inside the signed payload (`test_A8`).
+- **`key_id` swap between two valid signatures**: refused (`test_A9`).
 
 ### Canonicalisation
 
@@ -90,13 +90,13 @@ All refused, all pinned in `tests/test_adversarial.py`:
 
 ---
 
-## Residual risk — accepted, not overlooked
+## Residual risk, accepted, not overlooked
 
 | # | Risk | Why it is accepted | Reference |
 |---|---|---|---|
 | **R-1** | A holder of the device key can rewrite the journal consistently and it verifies | Hash chaining gives tamper *evidence*, not resistance. The fix is an external witness holding checkpoint roots; the checkpoints are produced, the transmission belongs to whoever operates the fleet | ADR 0007, `test_B4` (passes deliberately) |
 | **R-2** | Anyone who can write the trust store can admit anything | The trust store is the root. Protecting it is a filesystem and provisioning problem, not one this package can solve from inside | ADR 0006 |
-| **R-3** | Signing keys sit in the clear on disk | Attestation without a secure element is theatre. Encrypting the file with a passphrase stored beside it would be worse — it would look solved | ADR 0006 |
+| **R-3** | Signing keys sit in the clear on disk | Attestation without a secure element is theatre. Encrypting the file with a passphrase stored beside it would be worse, it would look solved | ADR 0006 |
 | **R-4** | Truncation after the last checkpoint is undetectable from the file alone | Same root cause as R-1: no external anchor | `test_truncation_is_detected_only_against_a_checkpoint` |
 | **R-5** | The policy file can be edited by anyone who can write it | Rules are data on purpose, so they can be diffed and reviewed. Integrity is a deployment control | ADR 0004 |
 | **R-6** | Nothing has run on hardware | Every backend but the simulator raises `NotPortedError`. The stop channel has never held a relay, and a simulated relay cannot lose power | README, `hal/devices.py` |

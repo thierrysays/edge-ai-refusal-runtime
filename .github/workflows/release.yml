@@ -3,7 +3,7 @@ name: release
 # Cuts a release from whatever `main` currently is: an annotated tag at that
 # commit, plus a GitHub Release whose notes are the matching CHANGELOG section.
 #
-# Run it from the Actions tab — "release" → "Run workflow". Nothing fires on a
+# Run it from the Actions tab, "release" → "Run workflow". Nothing fires on a
 # push; a release is a decision, not a side effect of merging.
 #
 # The version is read from pyproject.toml rather than typed into the form, so
@@ -84,6 +84,6 @@ jobs:
             --notes-file RELEASE_NOTES.md \
             --verify-tag
 
-      - name: Dry run — nothing was created
+      - name: Dry run, nothing was created
         if: ${{ inputs.dry_run }}
         run: echo "Dry run. Re-run with dry_run unchecked to create ${{ steps.version.outputs.tag }}."

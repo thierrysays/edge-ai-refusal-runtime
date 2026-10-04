@@ -138,7 +138,7 @@ def marker(clock):
         model_id="weld-defect-detector",
         model_version="1.4.0",
         card_digest="sha256:" + "aa" * 32,
-        disclosure="Automated visual inspection — AI generated result.",
+        disclosure="Automated visual inspection, AI generated result.",
         clock=clock,
     )
 

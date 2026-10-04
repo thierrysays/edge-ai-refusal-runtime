@@ -1,4 +1,4 @@
-# ADR 0008 — Budget exhaustion engages the stop channel
+# ADR 0008, Budget exhaustion engages the stop channel
 
 **Status:** accepted · 2026-08-21
 
@@ -16,7 +16,7 @@ Exhausting any budget engages the stop channel and writes a `stop` record.
 
 An agent that has spent its allocation has demonstrated that its plan and its
 allowance disagree. The correct response to that disagreement is to stop and
-involve a human — not to keep refusing individual requests while the agent keeps
+involve a human, not to keep refusing individual requests while the agent keeps
 trying, which converts a governance signal into background noise.
 
 ## Cost

@@ -1,6 +1,6 @@
 """End-to-end tests on the governed runtime.
 
-These assert on the *world* — what the cell did — not on log lines. A governance
+These assert on the *world* (what the cell did) not on log lines. A governance
 test that only checks that something was logged is testing the logger.
 """
 

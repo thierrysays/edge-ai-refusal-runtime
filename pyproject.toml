@@ -19,6 +19,10 @@ dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10", "bandit>=1.7", "pip-audit>=2.7"]
+# Crash telemetry, opt-in. `observability.py` no-ops without both this extra
+# installed and SENTRY_DSN set, so the default install stays at one runtime
+# dependency; see `observability.py` for why this is not a governance control.
+observability = ["sentry-sdk>=2,<3"]
 
 [project.scripts]
 gea = "governed_edge_ai.cli:main"
@@ -43,7 +47,7 @@ target-version = "py310"
 # F and I are errors: an unused import or a shadowed name is a defect in a
 # repository whose subject is knowing exactly what is loaded. B and S are the
 # bug and security rule sets. The path-handling (PTH) and style-modernisation
-# (UP) sets are deliberately NOT enabled — they would churn working code
+# (UP) sets are deliberately NOT enabled, they would churn working code
 # without changing behaviour, and this repository has no spare credibility to
 # spend on a diff nobody asked for.
 select = ["E", "F", "W", "I", "B", "S", "C4", "SIM", "RET"]
@@ -55,9 +59,14 @@ ignore = ["E501", "SIM108", "RET504"]
 
 [tool.mypy]
 strict = true
-files = ["src", "scripts"]
+files = ["src"]
 warn_unused_ignores = true
 warn_unreachable = true
+
+[[tool.mypy.overrides]]
+# Optional dependency, not installed by default; see the `observability` extra.
+module = ["sentry_sdk", "sentry_sdk.*"]
+ignore_missing_imports = true
 
 [tool.coverage.run]
 branch = true

@@ -3,7 +3,7 @@
 These profiles are data, and they are the honest part of the repository: they
 record what each board *can* enforce, which is not the same as what a model card
 would like it to enforce. The admission gate consults them, so a profile that
-overstates a device's capability is not a documentation error — it is a control
+overstates a device's capability is not a documentation error, it is a control
 failure.
 
 Backends raise :class:`~.base.NotPortedError` with a specific porting note until
@@ -34,7 +34,7 @@ from .base import DeviceProfile, NotPortedError
 UNO_Q = DeviceProfile(
     device_class="uno-q",
     description=(
-        "Arduino UNO Q 4 GB — Qualcomm Dragonwing QRB2210 running Debian, "
+        "Arduino UNO Q 4 GB, Qualcomm Dragonwing QRB2210 running Debian, "
         "paired with an STM32U585 real-time microcontroller. Linux gives it a "
         "durable filesystem, so it can hold the journal; Qwiic gives it the "
         "Modulino nodes for the stop relay and the confirmation button."
@@ -50,13 +50,13 @@ UNO_Q = DeviceProfile(
     ),
     energy_model={"inference": 0.9, "set_speed": 0.5, "divert_part": 2.0,
                   "stop_conveyor": 0.2, "resume_conveyor": 1.0},
-    energy_model_source="estimate — not yet measured on the bench",
+    energy_model_source="estimate, not yet measured on the bench",
 )
 
 VENTUNO_Q = DeviceProfile(
     device_class="ventuno-q",
     description=(
-        "Arduino VENTUNO Q — Qualcomm Dragonwing IQ8 with an NPU rated around "
+        "Arduino VENTUNO Q, Qualcomm Dragonwing IQ8 with an NPU rated around "
         "40 TOPS, 16 GB RAM, and an STM32H5 on Zephyr for actuation. Linux plus "
         "CAN-FD plus ROS 2: the only board here that can run a real vision model "
         "and drive machinery from the same enclosure."
@@ -72,7 +72,7 @@ VENTUNO_Q = DeviceProfile(
     ),
     energy_model={"inference": 2.4, "set_speed": 0.5, "divert_part": 2.0,
                   "stop_conveyor": 0.2, "resume_conveyor": 1.0},
-    energy_model_source="estimate — not yet measured on the bench",
+    energy_model_source="estimate, not yet measured on the bench",
 )
 
 UNO_R4_WIFI = DeviceProfile(
@@ -84,38 +84,38 @@ UNO_R4_WIFI = DeviceProfile(
         "hold the inference journal on its own."
     ),
     # Deliberately missing 'inference_journal'. Adding an SD shield or shipping
-    # records to a paired UNO Q would change this line — and only then.
+    # records to a paired UNO Q would change this line, and only then.
     available_controls=frozenset(
         {"policy_mediation", "stop_channel", "human_confirmation", "output_marking"}
     ),
     energy_model={"set_speed": 0.4, "divert_part": 1.8, "stop_conveyor": 0.1,
                   "resume_conveyor": 0.8},
-    energy_model_source="estimate — not yet measured on the bench",
+    energy_model_source="estimate, not yet measured on the bench",
 )
 
 ALVIK = DeviceProfile(
     device_class="alvik",
     description=(
-        "Arduino Alvik — mobile robot on a Nano ESP32, MicroPython. Used here as "
+        "Arduino Alvik, mobile robot on a Nano ESP32, MicroPython. Used here as "
         "the actuated system for oversight demonstrations, and as the STEM "
         "platform: the same robot, the same stop channel, two audiences."
     ),
     available_controls=frozenset({"policy_mediation", "stop_channel"}),
     energy_model={"drive": 3.0, "turn": 1.5, "stop": 0.1},
-    energy_model_source="estimate — not yet measured on the bench",
+    energy_model_source="estimate, not yet measured on the bench",
 )
 
 NESSO_N1 = DeviceProfile(
     device_class="nesso-n1",
     description=(
-        "Arduino Nesso N1 — ESP32-C6 with Wi-Fi 6, BLE, 802.15.4 and a LoRa "
+        "Arduino Nesso N1, ESP32-C6 with Wi-Fi 6, BLE, 802.15.4 and a LoRa "
         "radio, plus a touchscreen and two buttons. Its value here is the "
         "out-of-band path: an oversight console and a stop signal that do not "
         "depend on the network the governed system is using."
     ),
     available_controls=frozenset({"human_confirmation", "stop_channel"}),
     energy_model={"notify": 0.2, "confirm": 0.1},
-    energy_model_source="estimate — not yet measured on the bench",
+    energy_model_source="estimate, not yet measured on the bench",
 )
 
 PROFILES: dict[str, DeviceProfile] = {
@@ -162,7 +162,7 @@ class _UnportedRelay:
         self._note = note
 
     def energised(self) -> bool:
-        # An unported relay reports "not energised" — stopped — rather than
+        # An unported relay reports "not energised" (stopped) rather than
         # raising. Fail-safe beats fail-loud for the stop path.
         return False
 

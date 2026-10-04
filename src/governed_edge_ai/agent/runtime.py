@@ -58,7 +58,7 @@ class GovernedRuntime:
     """Runs an admitted model against a device, under controls.
 
     The constructor does not admit anything. :meth:`open_session` does, and it
-    raises if admission fails — there is no object state in which a model is
+    raises if admission fails, there is no object state in which a model is
     loaded but ungoverned.
     """
 
@@ -198,7 +198,7 @@ class GovernedRuntime:
         """Run one actuation request through every control, in order."""
         self.counters["requests"] += 1
 
-        # 1 — stop channel
+        # 1, stop channel
         if self.supervisor.stopped():
             return self._refuse(
                 request,
@@ -208,7 +208,7 @@ class GovernedRuntime:
                 kind="stop",
             )
 
-        # 2 — policy
+        # 2, policy
         decision: Decision = self.policy.decide(request)
         self.journal.append(
             "policy_decision",
@@ -223,7 +223,7 @@ class GovernedRuntime:
                 reasons=decision.reasons,
             )
 
-        # 3 — human oversight
+        # 3, human oversight
         if decision.needs_human:
             self.counters["escalated"] += 1
             record = self.supervisor.ask(request.to_dict(), decision.reasons)
@@ -239,7 +239,7 @@ class GovernedRuntime:
                 )
             self.counters["escalations_approved"] += 1
 
-        # 4 — budgets
+        # 4, budgets
         energy = self.device.profile.energy_model.get(request.action, 0.0)
         try:
             self.budgets.consume_many({"actions": 1, "energy_j": energy})
@@ -255,7 +255,7 @@ class GovernedRuntime:
                 reasons=(str(exc), "stop channel engaged on budget exhaustion"),
             )
 
-        # 5 — actuation
+        # 5, actuation
         result = self.device.perform(request.action, request.params)
         entry = self.journal.append(
             "actuation",

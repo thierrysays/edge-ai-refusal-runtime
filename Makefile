@@ -1,10 +1,42 @@
-.PHONY: lint typecheck security audit counts qa install test demo verify clean
+.PHONY: install test smoke unit functional security docs pentest fuzz demo verify tamper lint typecheck sast audit cover qa clean
 
 install:
 	pip install -e ".[dev]"
 
-test:
-	python -m pytest
+# ---------------------------------------------------------------- test layers
+# Seven layers, each answering a different question, each runnable alone. Run in
+# this order: the fast shallow ones first, so a broken build fails in a second
+# rather than in twenty, and so a failure names its own category before anyone
+# reads the output.
+
+smoke:      ## does it start, and does every entry point answer at all
+	python -m pytest tests/test_smoke.py -q
+
+unit:       ## does each control refuse exactly what it is supposed to refuse
+	python -m pytest tests/test_journal.py tests/test_policy.py \
+		tests/test_registry_admission.py tests/test_oversight_and_marking.py -q
+
+functional: ## do the journeys leave the cell in the state the operator expected
+	python -m pytest tests/test_runtime_e2e.py tests/test_cli.py -q
+
+security:   ## attacks on the controls, rather than exercises of them
+	python -m pytest tests/test_adversarial.py -q
+
+docs:       ## the control map is a contract, and links have to resolve
+	python -m pytest tests/test_repository.py -q
+
+test: smoke unit functional security docs
+
+# ------------------------------------------------------------------- pen-test
+# The fuzzer asserts one property: verify_journal() and validate_card() answer
+# with a result or a named governance error, for any input at all. It found one
+# defect on its first run, recorded in docs/BUILD_LOG.en.md.
+
+fuzz:
+	python tools/fuzz_evidence.py --iterations 4000 --seed 12
+	python tools/fuzz_evidence.py --iterations 4000 --seed 2026
+
+pentest: security fuzz sast
 
 demo:
 	python -m governed_edge_ai.cli demo --out ./run --parts 16
@@ -33,21 +65,18 @@ clean:
 # warning nobody reads.
 
 lint:
-	python -m ruff check src tests scripts
+	python -m ruff check src tests tools
 
 typecheck:
 	python -m mypy
 
-security:
-	python -m bandit -q -r src
-	python -m pip_audit --progress-spinner off
+sast:
+	python -m bandit -q -r src tools
 
-# A count written next to a command is stale the moment somebody adds a test.
-# This is the only part of the gate that reads the documentation.
-counts:
-	python scripts/check_documented_counts.py
+audit:
+	python -m pip_audit --progress-spinner off
 
 cover:
 	python -m pytest --cov --cov-report=term-missing
 
-qa: lint typecheck security counts cover
+qa: lint typecheck sast audit cover

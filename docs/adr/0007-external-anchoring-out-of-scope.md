@@ -1,4 +1,4 @@
-# ADR 0007 — External anchoring is out of scope (accepted gap)
+# ADR 0007, External anchoring is out of scope (accepted gap)
 
 **Status:** accepted · 2026-08-21
 
@@ -12,7 +12,7 @@ verifies.
 
 ## Decision
 
-`Journal.checkpoint()` produces exactly the artefact that would close this gap —
+`Journal.checkpoint()` produces exactly the artefact that would close this gap,
 a range, a Merkle root, a chain head, and a signature, carrying no payload, so
 it can be published without disclosing anything. Transmitting it to a witness is
 deliberately not implemented.
