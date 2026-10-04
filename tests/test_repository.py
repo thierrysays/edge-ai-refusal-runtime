@@ -29,6 +29,10 @@ LINK = re.compile(r"\[[^\]]+\]\((?!https?://|mailto:)([^)#]+)")
 EM_DASH = "\u2014"
 FENCED = re.compile(r"```.*?```", re.DOTALL)
 INLINE_CODE = re.compile(r"`[^`\n]*`")
+#: A human's assertion that a line quotes something and may not be rewritten.
+#: A gate that forces a misquote is worse than the convention it enforces, so
+#: the exemption exists, requires a person to claim it, and shows in the diff.
+QUOTED = "<!-- register: quoted -->"
 BACKTICKED_TEST = re.compile(r"`(test_[A-Za-z0-9_]+)")
 ADR_REFERENCE = re.compile(r"ADR (\d{4})")
 
@@ -198,9 +202,11 @@ def test_no_markdown_prose_uses_the_banned_dash(document):
     for, while its own commit message claimed otherwise. A convention nothing
     reads is a convention that decays.
     """
-    prose = markdown_prose(document)
+    lines = markdown_prose(document).splitlines()
+    exempt = {n for n, line in enumerate(lines) if QUOTED in line}
+    exempt |= {n + 1 for n in exempt}          # the marker may sit on the line before
     offenders = [
-        line for line in prose.splitlines() if EM_DASH in line
+        line for n, line in enumerate(lines) if EM_DASH in line and n not in exempt
     ]
     assert not offenders, (
         f"{document.relative_to(ROOT)} uses U+2014 in prose: {offenders[0].strip()[:70]}"
